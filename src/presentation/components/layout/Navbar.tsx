@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
+import { ThemeToggle } from "../common/ThemeToggle";
 
 /**
- * Navbar Component (Organism)
  * Main navigation bar with links and user actions
  */
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  // TODO: Replace with actual auth state from Supabase
+  // Mock user data - will be replaced with real authentication
   const isAuthenticated = false;
 
   const navLinks = [
@@ -44,18 +44,20 @@ export function Navbar() {
                 href={link.href}
                 className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2"
               >
-                <span>{link.icon}</span>
                 <span>{link.label}</span>
               </Link>
             ))}
           </div>
 
-          {/* Right Actions */}
+          {/* Right Section - Theme Toggle, Auth & Notifications */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {isAuthenticated ? (
               <>
                 {/* Notifications */}
-                <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 relative">
+                <button className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                   <span className="text-2xl">🔔</span>
                   <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
@@ -151,34 +153,42 @@ export function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4">
+            {/* Mobile Theme Toggle */}
+            <div className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center justify-between">
+              <span className="text-gray-700 dark:text-gray-300">โหมด</span>
+              <ThemeToggle className="p-0" />
+            </div>
+
+            {/* Mobile Navigation Links */}
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <span className="mr-2">{link.icon}</span>
                 {link.label}
               </Link>
             ))}
-            <hr className="my-4 border-gray-200 dark:border-gray-700" />
+
+            {/* Mobile Auth Links */}
             {isAuthenticated ? (
               <>
                 <Link
                   href="/dashboard"
-                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
                 >
                   🏆 Dashboard
                 </Link>
                 <Link
                   href="/profile"
-                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
                 >
                   👤 โปรไฟล์
                 </Link>
-                <button className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-red-600">
+                <button className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-red-600 dark:text-red-400">
                   🚪 ออกจากระบบ
                 </button>
               </>
@@ -186,13 +196,13 @@ export function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
                 >
                   เข้าสู่ระบบ
                 </Link>
                 <Link
                   href="/register"
-                  className="block px-4 py-3 bg-gradient-to-r from-sky-300 to-violet-300 text-white rounded-lg text-center"
+                  className="block px-4 py-3 bg-gradient-to-r from-sky-300 to-violet-300 dark:from-sky-400 dark:to-violet-400 text-white rounded-lg text-center"
                 >
                   สมัครสมาชิก
                 </Link>

@@ -14,19 +14,17 @@ export function HeroSection() {
 
   const handleSearch = () => {
     // TODO: Implement search functionality
-    console.log("Search:", { destination, checkIn, checkOut, guests });
   };
 
   return (
     <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
       {/* Background with gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-sky-300 to-violet-300">
-        <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-r from-sky-300 to-violet-300 dark:from-sky-400 dark:to-violet-400">
+        <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
-        {/* Heading */}
         <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
           Plan Your Dream Trip
         </h1>
@@ -47,7 +45,7 @@ export function HeroSection() {
                 placeholder="ค้นหาจุดหมาย..."
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
 
@@ -60,7 +58,7 @@ export function HeroSection() {
                 type="date"
                 value={checkIn}
                 onChange={(e) => setCheckIn(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -73,7 +71,7 @@ export function HeroSection() {
                 type="date"
                 value={checkOut}
                 onChange={(e) => setCheckOut(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -84,8 +82,8 @@ export function HeroSection() {
               </label>
               <select
                 value={guests}
-                onChange={(e) => setGuests(Number(e.target.value))}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
+                onChange={(e) => setGuests(parseInt(e.target.value))}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                   <option key={num} value={num}>
@@ -99,7 +97,7 @@ export function HeroSection() {
           {/* Search Button */}
           <button
             onClick={handleSearch}
-            className="mt-4 w-full md:w-auto px-8 py-3 bg-gradient-to-r from-sky-300 to-violet-300 text-white font-semibold rounded-lg hover:from-sky-400 hover:to-violet-400 transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="mt-4 w-full md:w-auto px-8 py-3 bg-gradient-to-r from-sky-300 to-violet-300 dark:from-sky-400 dark:to-violet-400 text-white font-semibold rounded-lg hover:from-sky-400 hover:to-violet-400 dark:hover:from-sky-500 dark:hover:to-violet-500 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             ค้นหาที่พัก
           </button>

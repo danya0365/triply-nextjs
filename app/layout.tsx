@@ -1,3 +1,5 @@
+import { MainLayout } from "@/src/presentation/components/layout";
+import { ThemeProvider } from "@/src/presentation/components/providers/ThemeProvider";
 import type { Metadata } from "next";
 import "../public/styles/index.css";
 
@@ -68,21 +70,7 @@ export const metadata: Metadata = {
     ],
     locale: "th_TH",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Triply | แพลตฟอร์มจองที่พักและวางแผนการเดินทาง",
-    description:
-      "วางแผนการเดินทางที่สมบูรณ์แบบ จองที่พัก และรับรางวัลทุกการเดินทาง",
-    images: ["/og-image.svg"],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Triply",
-  },
 };
-
-import { MainLayout } from "@/src/presentation/components/layout";
 
 export default function RootLayout({
   children,
@@ -91,8 +79,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th" suppressHydrationWarning>
-      <body className={`antialiased`}>
-        <MainLayout>{children}</MainLayout>
+      <body className="antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <MainLayout>{children}</MainLayout>
+        </ThemeProvider>
       </body>
     </html>
   );
