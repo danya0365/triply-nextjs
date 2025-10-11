@@ -10,7 +10,7 @@ export function GamificationPreview() {
       icon: "🎯",
       title: "ภารกิจรายวัน",
       description: "ทำภารกิจง่ายๆ ทุกวันเพื่อรับคะแนนสะสม",
-      color: "from-blue-500 to-cyan-500",
+      color: "from-sky-200 to-cyan-200",
     },
     {
       icon: "🏆",
@@ -22,7 +22,7 @@ export function GamificationPreview() {
       icon: "🎁",
       title: "รางวัลสุดพิเศษ",
       description: "แลกคะแนนเพื่อรับส่วนลดและสิทธิพิเศษ",
-      color: "from-orange-500 to-red-500",
+      color: "from-violet-200 to-purple-200",
     },
     {
       icon: "⭐",
@@ -37,7 +37,7 @@ export function GamificationPreview() {
       <div className="container mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <div className="inline-block px-6 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-semibold rounded-full mb-4">
+          <div className="inline-block px-6 py-2 bg-gradient-to-r from-violet-300 to-purple-300 text-white font-semibold rounded-full mb-4">
             ✨ รางวัลพิเศษ
           </div>
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -72,7 +72,7 @@ export function GamificationPreview() {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-gradient-to-r from-blue-500 to-orange-500 rounded-2xl p-8 text-center text-white">
+        <div className="bg-gradient-to-r from-sky-300 to-violet-300 rounded-2xl p-8 text-center text-white">
           <h3 className="text-3xl font-bold mb-4">
             เริ่มสะสมคะแนนวันนี้!
           </h3>
@@ -80,7 +80,7 @@ export function GamificationPreview() {
             สมัครสมาชิกและรับ 100 คะแนนฟรีทันที
           </p>
           <div className="flex gap-4 justify-center">
-            <button className="px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+            <button className="px-8 py-3 bg-white text-sky-500 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
               สมัครสมาชิก
             </button>
             <button className="px-8 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/30 transition-colors">

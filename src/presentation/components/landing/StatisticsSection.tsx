@@ -32,7 +32,7 @@ export function StatisticsSection({ statistics }: StatisticsSectionProps) {
               <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform">
                 {stat.icon}
               </div>
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent mb-2">
+              <div className="text-4xl font-bold bg-gradient-to-r from-sky-400 to-violet-400 bg-clip-text text-transparent mb-2">
                 {stat.value}<span className="text-2xl">{stat.suffix}</span>
               </div>
               <div className="text-gray-600 dark:text-gray-400 font-medium">

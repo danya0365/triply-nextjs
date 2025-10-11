@@ -54,16 +54,16 @@ export function HowItWorks() {
             >
               {/* Connector Line (hidden on last item) */}
               {step.number < 4 && (
-                <div className="hidden lg:block absolute top-16 left-1/2 w-full h-0.5 bg-gradient-to-r from-blue-500 to-orange-500 opacity-30" />
+                <div className="hidden lg:block absolute top-16 left-1/2 w-full h-0.5 bg-gradient-to-r from-sky-300 to-violet-300 opacity-30" />
               )}
 
               {/* Icon Circle */}
-              <div className="relative inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full mb-6 group-hover:scale-110 transition-transform">
+              <div className="relative inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-sky-300 to-violet-300 rounded-full mb-6 group-hover:scale-110 transition-transform">
                 <div className="flex items-center justify-center w-28 h-28 bg-white dark:bg-gray-800 rounded-full">
                   <span className="text-5xl">{step.icon}</span>
                 </div>
                 {/* Step Number */}
-                <div className="absolute -top-2 -right-2 w-10 h-10 bg-orange-500 text-white font-bold rounded-full flex items-center justify-center text-lg">
+                <div className="absolute -top-2 -right-2 w-10 h-10 bg-violet-400 text-white font-bold rounded-full flex items-center justify-center text-lg">
                   {step.number}
                 </div>
               </div>

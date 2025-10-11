@@ -31,7 +31,7 @@ export function Navbar() {
             <div className="text-3xl transform group-hover:scale-110 transition-transform">
               ✈️
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-sky-400 to-violet-400 bg-clip-text text-transparent">
               Triply
             </span>
           </Link>
@@ -66,7 +66,7 @@ export function Navbar() {
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                     className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 bg-gradient-to-br from-sky-300 to-violet-300 rounded-full flex items-center justify-center text-white font-bold">
                       U
                     </div>
                     <span className="text-sm">▼</span>
@@ -116,7 +116,7 @@ export function Navbar() {
                 </Link>
                 <Link
                   href="/register"
-                  className="px-6 py-2 bg-gradient-to-r from-blue-500 to-orange-500 text-white rounded-lg hover:shadow-lg transition-all"
+                  className="px-6 py-2 bg-gradient-to-r from-sky-300 to-violet-300 text-white rounded-lg hover:shadow-lg transition-all"
                 >
                   สมัครสมาชิก
                 </Link>
@@ -192,7 +192,7 @@ export function Navbar() {
                 </Link>
                 <Link
                   href="/register"
-                  className="block px-4 py-3 bg-gradient-to-r from-blue-500 to-orange-500 text-white rounded-lg text-center"
+                  className="block px-4 py-3 bg-gradient-to-r from-sky-300 to-violet-300 text-white rounded-lg text-center"
                 >
                   สมัครสมาชิก
                 </Link>

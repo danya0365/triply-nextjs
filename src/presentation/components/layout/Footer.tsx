@@ -65,7 +65,7 @@ export function Footer() {
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <span className="text-3xl">✈️</span>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-orange-400 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-gradient-to-r from-sky-300 to-violet-300 bg-clip-text text-transparent">
                 Triply
               </span>
             </Link>
@@ -128,7 +128,7 @@ export function Footer() {
                 placeholder="อีเมลของคุณ"
                 className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-              <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-orange-500 text-white rounded-lg hover:shadow-lg transition-all">
+              <button className="px-6 py-2 bg-gradient-to-r from-sky-300 to-violet-300 text-white rounded-lg hover:shadow-lg transition-all">
                 สมัคร
               </button>
             </div>

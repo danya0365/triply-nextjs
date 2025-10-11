@@ -32,7 +32,7 @@ export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps
               className="group cursor-pointer rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
             >
               {/* Image */}
-              <div className="relative h-64 bg-gradient-to-br from-blue-400 to-purple-500 overflow-hidden">
+              <div className="relative h-64 bg-gradient-to-br from-sky-200 to-violet-200 overflow-hidden">
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
                 <div className="absolute inset-0 flex items-center justify-center text-white text-6xl">
                   📍
@@ -53,7 +53,7 @@ export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps
                   <span className="text-sm text-gray-500">
                     {destination.propertiesCount.toLocaleString()} ที่พัก
                   </span>
-                  <span className="text-lg font-semibold text-blue-600">
+                  <span className="text-lg font-semibold text-sky-500">
                     เริ่มต้น ฿{destination.startingPrice.toLocaleString()}
                   </span>
                 </div>
@@ -63,7 +63,7 @@ export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps
                   {destination.tags.slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                      className="px-3 py-1 bg-sky-100 text-sky-700 text-xs rounded-full"
                     >
                       {tag}
                     </span>

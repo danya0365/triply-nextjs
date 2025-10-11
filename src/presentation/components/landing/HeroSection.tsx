@@ -20,7 +20,7 @@ export function HeroSection() {
   return (
     <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
       {/* Background with gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-orange-500">
+      <div className="absolute inset-0 bg-gradient-to-r from-sky-300 to-violet-300">
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
@@ -47,7 +47,7 @@ export function HeroSection() {
                 placeholder="ค้นหาจุดหมาย..."
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
               />
             </div>
 
@@ -60,7 +60,7 @@ export function HeroSection() {
                 type="date"
                 value={checkIn}
                 onChange={(e) => setCheckIn(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
               />
             </div>
 
@@ -73,7 +73,7 @@ export function HeroSection() {
                 type="date"
                 value={checkOut}
                 onChange={(e) => setCheckOut(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
               />
             </div>
 
@@ -85,7 +85,7 @@ export function HeroSection() {
               <select
                 value={guests}
                 onChange={(e) => setGuests(Number(e.target.value))}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-300 focus:border-transparent"
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                   <option key={num} value={num}>
@@ -99,7 +99,7 @@ export function HeroSection() {
           {/* Search Button */}
           <button
             onClick={handleSearch}
-            className="mt-4 w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-500 to-orange-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="mt-4 w-full md:w-auto px-8 py-3 bg-gradient-to-r from-sky-300 to-violet-300 text-white font-semibold rounded-lg hover:from-sky-400 hover:to-violet-400 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             ค้นหาที่พัก
           </button>

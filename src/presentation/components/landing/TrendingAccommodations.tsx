@@ -33,12 +33,12 @@ export function TrendingAccommodations({ accommodations }: TrendingAccommodation
             >
               <div className="md:flex">
                 {/* Image */}
-                <div className="md:w-2/5 relative h-64 md:h-auto bg-gradient-to-br from-orange-400 to-pink-500">
+                <div className="md:w-2/5 relative h-64 md:h-auto bg-gradient-to-br from-violet-200 to-purple-300">
                   <div className="absolute inset-0 flex items-center justify-center text-white text-6xl">
                     🏨
                   </div>
                   {accommodation.isFeatured && (
-                    <div className="absolute top-4 left-4 px-3 py-1 bg-orange-500 text-white text-sm font-semibold rounded-full">
+                    <div className="absolute top-4 left-4 px-3 py-1 bg-violet-400 text-white text-sm font-semibold rounded-full">
                       Featured
                     </div>
                   )}
@@ -55,7 +55,7 @@ export function TrendingAccommodations({ accommodations }: TrendingAccommodation
 
                   {/* Rating */}
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="px-3 py-1 bg-blue-600 text-white font-bold rounded-lg">
+                    <div className="px-3 py-1 bg-sky-400 text-white font-bold rounded-lg">
                       {accommodation.rating}
                     </div>
                     <span className="text-gray-600 dark:text-gray-400">
@@ -85,7 +85,7 @@ export function TrendingAccommodations({ accommodations }: TrendingAccommodation
                         / คืน
                       </span>
                     </div>
-                    <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transition-all">
+                    <button className="px-6 py-2 bg-gradient-to-r from-sky-300 to-violet-300 text-white font-semibold rounded-lg hover:shadow-lg transition-all">
                       ดูรายละเอียด
                     </button>
                   </div>
