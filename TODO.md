@@ -26,7 +26,7 @@
 - [x] Layout (Navbar, Footer, MainLayout)
 - [x] Browse accommodations (Filters, Search, Sort, Pagination)
 - [x] Dark Mode (ThemeProvider + ThemeToggle Component)
-- [ ] Accommodation detail page
+- [x] Accommodation detail page (Gallery, Booking Card, Reviews, Host Info)
 - [ ] Trip planner page
 - [ ] Gamification dashboard
 - [ ] User dashboard
@@ -263,13 +263,13 @@ src/presentation/components/[name]/[Name]View.tsx      (UI Component)
 ## 📊 Project Status
 
 **Current Phase:** Phase 2 - UI Development with Mock Data
-**Progress:** 65%
-**Next Milestone:** Accommodation Detail Page
+**Progress:** 70%
+**Next Milestone:** Trip Planner Page
 **Target Launch:** Week 14
 **Design System:** ✅ Pastel Sky Theme (Sky Blue + Lavender)
 **Data:** ✅ Master Data (4 types) + Mock Data (180+ items)
-**Pages:** ✅ Landing + Browse Accommodations
-**Features:** ✅ Dark Mode with ThemeToggle Component
+**Pages:** ✅ Landing + Browse + Accommodation Detail
+**Features:** ✅ Dark Mode + Booking System + Reviews
 
 ---
 

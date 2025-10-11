@@ -4,6 +4,7 @@ import { useAccommodationsPresenter } from "@/src/presentation/presenters/accomm
 import type { AccommodationsViewModel } from "@/src/presentation/presenters/accommodations/AccommodationsPresenter";
 import type { Accommodation } from "@/src/data/mock/accommodations.mock";
 import { useState } from "react";
+import Link from "next/link";
 
 interface AccommodationsViewProps {
   initialViewModel: AccommodationsViewModel;
@@ -256,11 +257,12 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
                   }
                 >
                   {viewModel.accommodations.map((acc) => (
-                    <AccommodationCard
-                      key={acc.id}
-                      accommodation={acc}
-                      viewMode={viewMode}
-                    />
+                    <Link key={acc.id} href={`/accommodations/${acc.id}`}>
+                      <AccommodationCard
+                        accommodation={acc}
+                        viewMode={viewMode}
+                      />
+                    </Link>
                   ))}
                 </div>
 
