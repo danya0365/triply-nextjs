@@ -22,3 +22,4 @@
 - copy supabase migrations and seeds
 - copy public ที่มีอยู่ใน timeluxe-nextjs
 - gen Logo แล้วสร้าง favicon
+- copy env

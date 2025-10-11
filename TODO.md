@@ -22,7 +22,8 @@
 - [ ] Mock data creation
 
 ### Phase 2: UI Development with Mock Data (Week 3-6) 📝
-- [ ] Landing page
+- [x] Landing page (Hero, Destinations, Accommodations, How It Works, Gamification, Stats)
+- [x] Layout (Navbar, Footer, MainLayout)
 - [ ] Browse accommodations
 - [ ] Accommodation detail
 - [ ] Trip planner
@@ -92,12 +93,12 @@
 - [x] Setup Zustand for state management
 - [x] Setup localforage for persistence
 - [x] Setup axios for HTTP client
-- [ ] Setup Supabase for backend
-- [ ] Create Clean Architecture folder structure
-  - [ ] `/src/domain` - Entities, Interfaces, Types, Enums
-  - [ ] `/src/application` - Use Cases, DTOs, Services
-  - [ ] `/src/infrastructure` - API clients, Repositories, Storage
-  - [ ] `/src/presentation` - Components, Presenters, Hooks, Stores
+- [x] Setup Supabase for backend
+- [x] Create Clean Architecture folder structure
+  - [x] `/src/domain` - Entities, Interfaces, Types, Enums
+  - [x] `/src/application` - Use Cases, DTOs, Services
+  - [x] `/src/infrastructure` - API clients, Repositories, Storage
+  - [x] `/src/presentation` - Components, Presenters, Hooks, Stores
 
 ### 1.2 Design System & Brand Identity
 - [ ] **Color Palette - Travel & Adventure Theme**
@@ -220,7 +221,8 @@ src/presentation/components/[name]/[Name]View.tsx      (UI Component)
 - [ ] Mock Data creation (100+ accommodations, 30+ trips)
 
 **Sprint 2: Core Pages (Week 3-4)**
-- [ ] Landing Page with hero and featured destinations
+- [x] Landing Page with hero and featured destinations ✅
+- [x] Layout Components (Navbar + Footer) ✅
 - [ ] Browse Accommodations with filters
 - [ ] Accommodation Detail Page
 - [ ] Trip Planner interface
@@ -259,9 +261,9 @@ src/presentation/components/[name]/[Name]View.tsx      (UI Component)
 
 ## 📊 Project Status
 
-**Current Phase:** Phase 1 - Foundation & Core Setup
-**Progress:** 25%
-**Next Milestone:** Complete Master Data & Mock Data
+**Current Phase:** Phase 2 - UI Development with Mock Data
+**Progress:** 40%
+**Next Milestone:** Master Data Creation & Browse Accommodations Page
 **Target Launch:** Week 14
 
 ---

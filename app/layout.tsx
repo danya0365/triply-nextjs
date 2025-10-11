@@ -2,25 +2,24 @@ import type { Metadata } from "next";
 import "../public/styles/index.css";
 
 export const metadata: Metadata = {
-  title: "TimeLuxe | ตลาดกลางนาฬิกาหรู ซื้อขายนาฬิกาแบรนด์เนมระดับโลก",
+  title: "Triply | แพลตฟอร์มจองที่พักและวางแผนการเดินทาง",
   description:
-    "TimeLuxe - แพลตฟอร์มซื้อขายนาฬิกาหรูที่ใหญ่ที่สุด มีนาฬิกาแบรนด์เนมระดับโลก Rolex, Patek Philippe, Audemars Piguet รับประกันความแท้ 100% ระบบตรวจสอบโดยผู้เชี่ยวชาญ",
+    "วางแผนการเดินทางที่สมบูรณ์แบบกับ Triply จองที่พัก วางแผนทริป และรับรางวัลทุกการเดินทาง พร้อมระบบ Goals, Missions และ Achievements",
   keywords: [
-    "นาฬิกาหรู",
-    "ซื้อนาฬิกาแบรนด์เนม",
-    "ขายนาฬิกาหรู",
-    "Rolex",
-    "Patek Philippe",
-    "Audemars Piguet",
-    "นาฬิกามือสอง",
-    "นาฬิกาแท้",
-    "TimeLuxe",
-    "luxury watches",
-    "watch marketplace",
+    "จองที่พัก",
+    "วางแผนเที่ยว",
+    "ท่องเที่ยว",
+    "โรงแรม",
+    "รีสอร์ท",
+    "Triply",
+    "travel planning",
+    "accommodation booking",
+    "trip planner",
+    "rewards",
   ],
-  authors: [{ name: "TimeLuxe Team" }],
+  authors: [{ name: "Triply Team" }],
   creator: "Marosdee Uma",
-  publisher: "TimeLuxe",
+  publisher: "Triply",
   robots: {
     index: true,
     follow: true,
@@ -54,34 +53,36 @@ export const metadata: Metadata = {
   },
   manifest: "/favicon/site.webmanifest",
   openGraph: {
-    title: "TimeLuxe | ตลาดกลางนาฬิกาหรู ซื้อขายนาฬิกาแบรนด์เนมระดับโลก",
+    title: "Triply | แพลตฟอร์มจองที่พักและวางแผนการเดินทาง",
     description:
-      "แพลตฟอร์มซื้อขายนาฬิกาหรูที่ใหญ่ที่สุด Rolex, Patek Philippe, Audemars Piguet รับประกันความแท้ 100%",
+      "วางแผนการเดินทางที่สมบูรณ์แบบ จองที่พัก และรับรางวัลทุกการเดินทาง",
     type: "website",
-    siteName: "TimeLuxe",
+    siteName: "Triply",
     images: [
       {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "TimeLuxe - Luxury Watch Marketplace",
+        alt: "Triply - Travel Planning & Accommodation Booking",
       },
     ],
     locale: "th_TH",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TimeLuxe | ตลาดกลางนาฬิกาหรู ซื้อขายนาฬิกาแบรนด์เนมระดับโลก",
+    title: "Triply | แพลตฟอร์มจองที่พักและวางแผนการเดินทาง",
     description:
-      "แพลตฟอร์มซื้อขายนาฬิกาหรูที่ใหญ่ที่สุด รับประกันความแท้ 100% ระบบตรวจสอบโดยผู้เชี่ยวชาญ",
+      "วางแผนการเดินทางที่สมบูรณ์แบบ จองที่พัก และรับรางวัลทุกการเดินทาง",
     images: ["/og-image.svg"],
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "TimeLuxe",
+    title: "Triply",
   },
 };
+
+import { MainLayout } from "@/src/presentation/components/layout";
 
 export default function RootLayout({
   children,
@@ -89,8 +90,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`antialiased`}>{children}</body>
+    <html lang="th" suppressHydrationWarning>
+      <body className={`antialiased`}>
+        <MainLayout>{children}</MainLayout>
+      </body>
     </html>
   );
 }
