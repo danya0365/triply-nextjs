@@ -23,10 +23,10 @@ export function LandingView({ viewModel }: LandingViewProps) {
       <HeroSection />
 
       {/* Featured Destinations */}
-      <FeaturedDestinations destinations={viewModel.featuredDestinations} />
+      <FeaturedDestinations destinations={viewModel.destinations} />
 
       {/* Trending Accommodations */}
-      <TrendingAccommodations accommodations={viewModel.trendingAccommodations} />
+      <TrendingAccommodations accommodations={viewModel.accommodations} />
 
       {/* How It Works */}
       <HowItWorks />

@@ -7,8 +7,8 @@ import { getPopularDestinations } from "@/src/data/master/destinations.master";
 import { getFeaturedAccommodations, ACCOMMODATIONS } from "@/src/data/mock/accommodations.mock";
 import { USERS } from "@/src/data/mock/users.mock";
 
-// View Model Interfaces
-interface Destination {
+// View Model Interfaces (exported for components)
+export interface Destination {
   id: string;
   name: string;
   country: string;
@@ -17,7 +17,7 @@ interface Destination {
   tags: string[];
 }
 
-interface Accommodation {
+export interface Accommodation {
   id: string;
   name: string;
   location: string;
@@ -28,7 +28,7 @@ interface Accommodation {
   isFeatured: boolean;
 }
 
-interface Statistics {
+export interface Statistics {
   totalProperties: number;
   destinations: number;
   happyTravelers: number;
