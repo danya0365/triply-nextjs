@@ -132,10 +132,11 @@ src/presentation/components/layout/
 
 ## 🎨 Design System Applied
 
-### Colors
+### Colors (Pastel Sky Theme) ☁️💜
 - **Navbar**: White (light) / Dark Gray (dark mode)
 - **Footer**: Dark Gray (#111827)
-- **Brand Gradient**: Blue → Orange
+- **Brand Gradient**: Sky Blue → Lavender (sky-400 → violet-400)
+- **Primary Buttons**: Sky 300 → Violet 300
 - **Hover States**: Light gray backgrounds
 
 ### Typography

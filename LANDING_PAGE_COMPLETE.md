@@ -155,19 +155,18 @@ interface Statistics {
   happyTravelers: number;
   averageRating: number;
 }
-```
 
 ---
 
 ## 🎨 Design System Applied
 
-### Color Palette (Travel Theme)
-- **Primary**: Blue (`#0EA5E9`) → Orange (`#F97316`)
-- **Accents**: Purple, Pink, Green
-- **Gradients**: Used throughout for visual appeal
-
-### Responsive Breakpoints
-- Mobile: `< 768px` (1 column)
+### Color Palette (Pastel Sky Theme) ☁️💜
+- **Primary Sky Blue**: `from-sky-200/300/400`
+- **Secondary Lavender**: `to-violet-200/300/400`
+- **Main Gradient**: `from-sky-300 to-violet-300`
+- **Soft Accents**: `from-sky-200 to-violet-200`
+- **Stats Gradient**: `from-sky-400 to-violet-400`
+- **Button Gradient**: `from-sky-300 to-violet-300`< 768px` (1 column)
 - Tablet: `768px - 1024px` (2 columns)
 - Desktop: `> 1024px` (4 columns)
 

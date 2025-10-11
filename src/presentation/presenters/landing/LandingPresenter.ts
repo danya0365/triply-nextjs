@@ -1,94 +1,26 @@
-import { createServerSupabaseClient } from "@/src/infrastructure/config/supabase-server-client";
-import { createClientSupabaseClient } from "@/src/infrastructure/config/supabase-client-client";
-import type { SupabaseClient } from "@supabase/supabase-js";
+/**
+ * Landing Page Presenter
+ * Handles business logic for the landing page using Mock Data
+ */
 
-// Mock data imports (will be replaced with real data later)
-const FEATURED_DESTINATIONS = [
-  {
-    id: "1",
-    name: "ภูเก็ต",
-    country: "ประเทศไทย",
-    image: "/images/destinations/phuket.jpg",
-    propertiesCount: 1250,
-    startingPrice: 800,
-    tags: ["beach", "tropical", "luxury"],
-  },
-  {
-    id: "2",
-    name: "เชียงใหม่",
-    country: "ประเทศไทย",
-    image: "/images/destinations/chiangmai.jpg",
-    propertiesCount: 850,
-    startingPrice: 500,
-    tags: ["mountain", "culture", "nature"],
-  },
-  {
-    id: "3",
-    name: "กรุงเทพฯ",
-    country: "ประเทศไทย",
-    image: "/images/destinations/bangkok.jpg",
-    propertiesCount: 2100,
-    startingPrice: 600,
-    tags: ["city", "shopping", "food"],
-  },
-  {
-    id: "4",
-    name: "บาหลี",
-    country: "อินโดนีเซีย",
-    image: "/images/destinations/bali.jpg",
-    propertiesCount: 1500,
-    startingPrice: 1200,
-    tags: ["beach", "culture", "relaxation"],
-  },
-];
+import { getPopularDestinations } from "@/src/data/master/destinations.master";
+import { getFeaturedAccommodations, ACCOMMODATIONS } from "@/src/data/mock/accommodations.mock";
+import { USERS } from "@/src/data/mock/users.mock";
 
-const TRENDING_ACCOMMODATIONS = [
-  {
-    id: "1",
-    name: "Luxury Beach Resort & Spa",
-    location: "ภูเก็ต, ประเทศไทย",
-    image: "/images/accommodations/resort-1.jpg",
-    rating: 9.2,
-    reviewCount: 1234,
-    pricePerNight: 3500,
-    amenities: ["pool", "spa", "beach", "wifi"],
-    isFeatured: true,
-  },
-  {
-    id: "2",
-    name: "Mountain View Villa",
-    location: "เชียงใหม่, ประเทศไทย",
-    image: "/images/accommodations/villa-1.jpg",
-    rating: 9.5,
-    reviewCount: 856,
-    pricePerNight: 2800,
-    amenities: ["pool", "mountain-view", "wifi", "parking"],
-    isFeatured: true,
-  },
-];
-
-const STATISTICS = {
-  totalProperties: 5200,
-  destinations: 150,
-  happyTravelers: 45000,
-  averageRating: 4.8,
-};
-
-export interface Destination {
+// View Model Interfaces
+interface Destination {
   id: string;
   name: string;
   country: string;
-  image: string;
   propertiesCount: number;
   startingPrice: number;
   tags: string[];
 }
 
-export interface Accommodation {
+interface Accommodation {
   id: string;
   name: string;
   location: string;
-  image: string;
   rating: number;
   reviewCount: number;
   pricePerNight: number;
@@ -96,7 +28,7 @@ export interface Accommodation {
   isFeatured: boolean;
 }
 
-export interface Statistics {
+interface Statistics {
   totalProperties: number;
   destinations: number;
   happyTravelers: number;
@@ -104,8 +36,8 @@ export interface Statistics {
 }
 
 export interface LandingViewModel {
-  featuredDestinations: Destination[];
-  trendingAccommodations: Accommodation[];
+  destinations: Destination[];
+  accommodations: Accommodation[];
   statistics: Statistics;
 }
 
@@ -114,50 +46,83 @@ export interface LandingViewModel {
  * Follows Clean Architecture with proper separation of concerns
  */
 export class LandingPresenter {
-  constructor(private readonly supabase: SupabaseClient) {}
-
   /**
    * Get view model for the landing page
    */
   async getViewModel(): Promise<LandingViewModel> {
-    try {
-      // TODO: Replace with real data from Supabase
-      // For now, return mock data
+    // Use real mock data
+    const popularDests = getPopularDestinations(4);
+    const featuredAccs = getFeaturedAccommodations(2);
+    
+    // Map destinations to view model format
+    const destinations: Destination[] = popularDests.map(dest => {
+      const destAccommodations = ACCOMMODATIONS.filter(acc => acc.destinationId === dest.id);
+      const prices = destAccommodations.map(acc => acc.basePricePerNight);
+      const minPrice = prices.length > 0 ? Math.min(...prices) : dest.averageBudget.min;
+      
       return {
-        featuredDestinations: FEATURED_DESTINATIONS,
-        trendingAccommodations: TRENDING_ACCOMMODATIONS,
-        statistics: STATISTICS,
+        id: dest.id,
+        name: dest.name,
+        country: dest.country,
+        propertiesCount: destAccommodations.length,
+        startingPrice: minPrice,
+        tags: dest.tags.slice(0, 3),
       };
-    } catch (error) {
-      console.error("Error fetching landing data:", error);
-      throw error;
-    }
+    });
+    
+    // Map accommodations to view model format
+    const accommodations: Accommodation[] = featuredAccs.map(acc => {
+      const destination = popularDests.find(d => d.id === acc.destinationId);
+      
+      return {
+        id: acc.id,
+        name: acc.name,
+        location: destination ? `${destination.name}, ${destination.country}` : acc.address,
+        rating: Math.round(acc.averageRating * 10) / 10,
+        reviewCount: acc.reviewCount,
+        pricePerNight: acc.basePricePerNight,
+        amenities: acc.highlights.slice(0, 4),
+        isFeatured: acc.isFeatured,
+      };
+    });
+    
+    // Calculate statistics from mock data
+    const totalBookings = USERS.reduce((sum, user) => sum + user.totalBookings, 0);
+    const avgRating = ACCOMMODATIONS.reduce((sum, acc) => sum + acc.averageRating, 0) / ACCOMMODATIONS.length;
+    
+    const statistics: Statistics = {
+      totalProperties: ACCOMMODATIONS.length,
+      destinations: popularDests.length,
+      happyTravelers: totalBookings,
+      averageRating: Math.round(avgRating * 10) / 10,
+    };
+    
+    return {
+      destinations,
+      accommodations,
+      statistics,
+    };
   }
 
   /**
    * Generate metadata for the page
    */
   async generateMetadata() {
-    try {
-      return {
-        title: "Triply | แพลตฟอร์มจองที่พักและวางแผนการเดินทาง",
-        description:
-          "วางแผนการเดินทางที่สมบูรณ์แบบกับ Triply จองที่พัก วางแผนทริป และรับรางวัลทุกการเดินทาง พร้อมระบบ Goals, Missions และ Achievements",
-        keywords: [
-          "จองที่พัก",
-          "วางแผนเที่ยว",
-          "ท่องเที่ยว",
-          "โรงแรม",
-          "รีสอร์ท",
-          "Triply",
-          "travel planning",
-          "accommodation booking",
-        ],
-      };
-    } catch (error) {
-      console.error("Error generating metadata:", error);
-      throw error;
-    }
+    return {
+      title: "Triply | แพลตฟอร์มจองที่พักและวางแผนการเดินทาง",
+      description:
+        "วางแผนการเดินทางที่สมบูรณ์แบบกับ Triply จองที่พัก วางแผนทริป และรับรางวัลทุกการเดินทาง พร้อมระบบ Goals, Missions และ Achievements",
+      keywords: [
+        "จองที่พัก",
+        "วางแผนเที่ยว",
+        "ท่องเที่ยว",
+        "โรงแรม",
+        "รีสอร์ท",
+        "Triply",
+        "travel planning",
+        "accommodation booking",
+      ],
+    };
   }
 }
 
@@ -166,12 +131,10 @@ export class LandingPresenter {
  */
 export class LandingPresenterFactory {
   static async createServer(): Promise<LandingPresenter> {
-    const supabase = createServerSupabaseClient();
-    return new LandingPresenter(supabase);
+    return new LandingPresenter();
   }
 
   static async createClient(): Promise<LandingPresenter> {
-    const supabase = createClientSupabaseClient();
-    return new LandingPresenter(supabase);
+    return new LandingPresenter();
   }
 }
