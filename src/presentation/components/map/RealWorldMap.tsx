@@ -13,7 +13,7 @@ import {
   calculateRouteDistance,
   estimateTravelTime,
 } from "@/src/utils/map/distance";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 
 const maxZoom = 30;
 const minZoom = 1;
@@ -50,12 +50,83 @@ export function RealWorldMap({
   const [measurePoints, setMeasurePoints] = useState<
     Array<{ lat: number; lng: number; name: string }>
   >([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
   // World SVG dimensions (from world.svg)
   const svgWidth = 1009.6727;
   const svgHeight = 665.96301;
+
+  // Initialize from URL parameters
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const urlZoom = params.get("zoom");
+    const urlLat = params.get("lat");
+    const urlLng = params.get("lng");
+    const urlDestId = params.get("dest");
+
+    if (urlZoom) setZoom(parseFloat(urlZoom));
+    if (urlLat && urlLng) {
+      const { x, y } = latLngToXY(parseFloat(urlLat), parseFloat(urlLng));
+      const centerX = containerRef.current?.clientWidth || 800 / 2;
+      const centerY = containerRef.current?.clientHeight || 600 / 2;
+      const zoom = urlZoom ? parseFloat(urlZoom) : minZoom;
+      setOffset({
+        x: centerX - x * zoom,
+        y: centerY - y * zoom,
+      });
+    }
+    if (urlDestId) setSelectedId(urlDestId);
+  }, []);
+
+  // Update URL when state changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams();
+    params.set("zoom", zoom.toFixed(2));
+
+    // Calculate center lat/lng from current view
+    const centerX = (containerRef.current?.clientWidth || 800) / 2;
+    const centerY = (containerRef.current?.clientHeight || 600) / 2;
+    const mapCenterX = (centerX - offset.x) / zoom;
+    const mapCenterY = (centerY - offset.y) / zoom;
+
+    // Reverse calculation (approximate)
+    const xNorm = mapCenterX / svgWidth;
+    const lng = geoViewBox.west + xNorm * (geoViewBox.east - geoViewBox.west);
+    const yNorm = mapCenterY / svgHeight;
+    const northRad = (geoViewBox.north * Math.PI) / 180;
+    const southRad = (geoViewBox.south * Math.PI) / 180;
+    const mercatorNorth = Math.log(Math.tan(Math.PI / 4 + northRad / 2));
+    const mercatorSouth = Math.log(Math.tan(Math.PI / 4 + southRad / 2));
+    const mercatorY = mercatorNorth - yNorm * (mercatorNorth - mercatorSouth);
+    const lat = (Math.atan(Math.exp(mercatorY)) - Math.PI / 4) * 2 * (180 / Math.PI);
+
+    params.set("lat", lat.toFixed(4));
+    params.set("lng", lng.toFixed(4));
+    if (selectedId) params.set("dest", selectedId);
+
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, "", newUrl);
+  }, [zoom, offset, selectedId]);
+
+  // Fullscreen change listener
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
 
   // GeoViewBox from world.svg: -169.110266 83.600842 190.486279 -58.508473
   // Format: [west(minLng), north(maxLat), east(maxLng), south(minLat)]
@@ -341,6 +412,122 @@ export function RealWorldMap({
     return calculateRouteDistance(measurePoints);
   }, [measurePoints]);
 
+  // Fullscreen toggle
+  const toggleFullscreen = useCallback(async () => {
+    if (!containerRef.current) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        await containerRef.current.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.error("Fullscreen error:", error);
+    }
+  }, []);
+
+  // Geolocation - Find Me
+  const findMyLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      alert("เบราว์เซอร์ของคุณไม่รองรับการหาตำแหน่ง");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setUserLocation({ lat, lng });
+
+        // Focus on user location
+        const { x, y } = latLngToXY(lat, lng);
+        if (!containerRef.current) return;
+
+        const container = containerRef.current;
+        const centerX = container.clientWidth / 2;
+        const centerY = container.clientHeight / 2;
+        const newZoom = 3;
+        const newOffset = {
+          x: centerX - x * newZoom,
+          y: centerY - y * newZoom,
+        };
+
+        setZoom(newZoom);
+        setOffset(newOffset);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        alert("ไม่สามารถหาตำแหน่งของคุณได้");
+      }
+    );
+  }, []);
+
+  // Screenshot/Export
+  const captureMap = useCallback(async () => {
+    if (!mapRef.current || !containerRef.current) return;
+
+    setIsCapturing(true);
+    try {
+      // Use html2canvas for screenshot
+      const { default: html2canvas } = await import("html2canvas");
+      const canvas = await html2canvas(containerRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        logging: false,
+      });
+
+      // Convert to blob and download
+      canvas.toBlob((blob: Blob | null) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.download = `triply-map-${Date.now()}.png`;
+          link.href = url;
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+      });
+    } catch (error) {
+      console.error("Capture error:", error);
+      alert("ไม่สามารถแคปเจอร์แผนที่ได้");
+    } finally {
+      setIsCapturing(false);
+    }
+  }, []);
+
+  // Share URL
+  const shareMap = useCallback(async () => {
+    const url = window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Triply - แผนที่ท่องเที่ยว",
+          text: selectedId
+            ? `ดูจุดหมาย: ${destinations.find((d) => d.id === selectedId)?.name}`
+            : "ดูแผนที่ท่องเที่ยวของฉัน",
+          url,
+        });
+      } catch (error) {
+        // User cancelled or error
+        if ((error as Error).name !== "AbortError") {
+          console.error("Share error:", error);
+        }
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(url);
+        alert("คัดลอก URL ลงคลิปบอร์ดแล้ว! 🎉");
+      } catch (error) {
+        console.error("Copy error:", error);
+        // Show URL in prompt as last resort
+        prompt("คัดลอก URL นี้:", url);
+      }
+    }
+  }, [selectedId, destinations]);
+
   return (
     <div className="relative" style={{ height }}>
       {/* Controls */}
@@ -378,6 +565,43 @@ export function RealWorldMap({
           title="รายการจุดหมาย"
         >
           📋
+        </button>
+        <button
+          onClick={toggleFullscreen}
+          className={`w-12 h-12 rounded-lg shadow-lg hover:shadow-xl flex items-center justify-center text-xl transition-all hover:scale-110 ${
+            isFullscreen
+              ? "bg-sky-500 text-white"
+              : "bg-white dark:bg-gray-800"
+          }`}
+          title={isFullscreen ? "ออกจากเต็มจอ" : "เต็มจอ"}
+        >
+          {isFullscreen ? "⤓" : "⤢"}
+        </button>
+        <button
+          onClick={findMyLocation}
+          className={`w-12 h-12 rounded-lg shadow-lg hover:shadow-xl flex items-center justify-center text-xl transition-all hover:scale-110 ${
+            userLocation
+              ? "bg-green-500 text-white"
+              : "bg-white dark:bg-gray-800"
+          }`}
+          title="หาตำแหน่งของฉัน"
+        >
+          📍
+        </button>
+        <button
+          onClick={captureMap}
+          disabled={isCapturing}
+          className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl disabled:opacity-50 flex items-center justify-center text-xl transition-all hover:scale-110"
+          title="แคปเจอร์แผนที่"
+        >
+          {isCapturing ? "⏳" : "📸"}
+        </button>
+        <button
+          onClick={shareMap}
+          className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl flex items-center justify-center text-xl transition-all hover:scale-110"
+          title="แชร์แผนที่"
+        >
+          🔗
         </button>
       </div>
 
@@ -949,6 +1173,55 @@ export function RealWorldMap({
               </div>
             );
           })}
+
+          {/* User Location Marker */}
+          {userLocation && (
+            <div
+              style={{
+                position: "absolute",
+                left: latLngToXY(userLocation.lat, userLocation.lng).x * zoom + offset.x,
+                top: latLngToXY(userLocation.lat, userLocation.lng).y * zoom + offset.y,
+                transform: "translate(-50%, -50%)",
+                zIndex: 200,
+                pointerEvents: "none",
+              }}
+            >
+              <svg width="40" height="40" viewBox="0 0 40 40">
+                {/* Pulse rings */}
+                <circle
+                  cx="20"
+                  cy="20"
+                  r="15"
+                  fill="#10b981"
+                  opacity="0.3"
+                  className="animate-ping"
+                />
+                <circle
+                  cx="20"
+                  cy="20"
+                  r="10"
+                  fill="#10b981"
+                  opacity="0.5"
+                  className="animate-pulse"
+                />
+                {/* Center dot */}
+                <circle
+                  cx="20"
+                  cy="20"
+                  r="5"
+                  fill="#10b981"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+              </svg>
+              {/* Label */}
+              <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                <div className="bg-green-500 text-white px-3 py-1 rounded-lg shadow-xl text-xs font-bold">
+                  📍 ตำแหน่งของคุณ
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1090,7 +1363,7 @@ export function RealWorldMap({
         </p>
         <p className="text-xs mt-1 text-gray-500">
           แผนที่ SVG จริง + พิกัด Lat/Lng · กรอง/ค้นหา · Clustering · เส้นทาง ·
-          📐 วัดระยะ · 🗺️ Minimap
+          📐 วัดระยะ · 🗺️ Minimap · 🖼️ Fullscreen · 📍 Find Me · 📸 Screenshot · 🔗 Share
         </p>
       </div>
     </div>
