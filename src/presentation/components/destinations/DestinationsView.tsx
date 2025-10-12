@@ -10,6 +10,9 @@ import { BudgetDestinationFinder } from "./BudgetDestinationFinder";
 import { SeasonalGuide } from "./SeasonalGuide";
 import { TripInspirationQuiz } from "../quiz/TripInspirationQuiz";
 import { QuizHistory } from "../quiz/QuizHistory";
+import { DestinationGallery } from "./DestinationGallery";
+import { DestinationCollections } from "./DestinationCollections";
+import { DestinationMap } from "./DestinationMap";
 
 interface DestinationsViewProps {
   initialViewModel: DestinationsViewModel;
@@ -94,6 +97,15 @@ export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
 
         {/* NEW: Seasonal Guide */}
         <SeasonalGuide destinations={viewModel.destinations} />
+
+        {/* NEW: Destination Collections */}
+        <DestinationCollections destinations={viewModel.destinations} />
+
+        {/* NEW: Destination Gallery */}
+        <DestinationGallery destinations={viewModel.destinations} />
+
+        {/* NEW: Interactive Map */}
+        <DestinationMap destinations={viewModel.destinations} />
 
         {/* Divider */}
         <div className="my-12 border-t-2 border-gray-200 dark:border-gray-700"></div>
