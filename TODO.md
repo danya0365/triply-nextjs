@@ -570,11 +570,233 @@ trip_comments (id, trip_id, user_id, content)
 
 ---
 
+## 🗺️ DESTINATION DISCOVERY FEATURES (NEW!)
+
+### ปัญหา: คนที่เข้ามาใหม่ไม่รู้ว่าจะไปไหนดี
+**Solution:** ระบบช่วย Inspire และ Guide หาจุดหมายที่ใช่
+
+---
+
+### 🎯 Priority 1: Quick Wins (1-2 วัน)
+
+#### 15. 🔥 Trending Destinations
+**Status:** Planned
+**Value:** Show what's popular right now
+
+**Features:**
+- [ ] Top 10 จุดหมายยอดนิยมสัปดาห์นี้
+- [ ] เรียงตาม popularity score
+- [ ] แสดงเปอร์เซ็นต์เปลี่ยนแปลง (+24% จากสัปดาห์ที่แล้ว)
+- [ ] Card grid layout สวยๆ
+- [ ] Quick stats (ราคาเริ่มต้น, rating, จำนวนคนดู)
+- [ ] Filter by category (ในไทย/ต่างประเทศ)
+
+**Components:**
+```
+- TrendingDestinationsSection.tsx
+- DestinationTrendCard.tsx
+- TrendingBadge.tsx
+```
+
+#### 16. 💰 Budget-Based Destination Finder
+**Status:** Planned
+**Value:** หาจุดหมายตามงบ
+
+**Features:**
+- [ ] Input: งบประมาณ + จำนวนวัน
+- [ ] Filter destinations ตามเงื่อนไข
+- [ ] แสดงจุดหมายที่งบพอ
+- [ ] เรียงตามความคุ้มค่า
+- [ ] แสดงรายละเอียดค่าใช้จ่ายโดยประมาณ
+- [ ] "แพ็คเกจแนะนำ" สำหรับแต่ละงบ
+
+#### 17. 📅 Best Time to Visit (Seasonal Guide)
+**Status:** Planned  
+**Value:** แนะนำจุดหมายตามฤดูกาล
+
+**Features:**
+- [ ] "เดือนนี้ไปไหนดี?" (Current month)
+- [ ] แนะนำ 10 จุดหมายที่เหมาะสม
+- [ ] แจ้งเตือนจุดหมายที่ควรหลีกเลี่ยง (ฝนตก/ร้อนเกิน)
+- [ ] แสดงอุณหภูมิโดยประมาณ
+- [ ] ปฏิทินแสดงช่วงเวลาที่ดีที่สุด
+- [ ] Weather info integration
+
+---
+
+### 🎯 Priority 2: High Impact Features (3-5 วัน)
+
+#### 18. 🧭 Trip Inspiration Quiz (RECOMMENDED!)
+**Status:** Planned
+**Value:** ช่วยหาจุดหมายที่ใช่ผ่านคำถาม 5 ข้อ
+
+**Features:**
+- [ ] Interactive quiz (5 questions)
+  - งบประมาณ (4 ตัวเลือก)
+  - ประเภทที่ชอบ (ทะเล/ภูเขา/เมือง/วัฒนธรรม)
+  - ไปกับใคร (คู่รัก/ครอบครัว/เพื่อน/คนเดียว)
+  - กิจกรรมที่ชอบ (ผ่อนคลาย/ผจญภัย/กินเดิน/ถ่ายรูป)
+  - จำนวนวัน (1-2/3-4/5-7/7+)
+- [ ] Matching algorithm (คำนวณ Match %)
+- [ ] แสดง 3-5 จุดหมายที่เหมาะสม
+- [ ] อธิบายเหตุผลว่าทำไมเหมาะ
+- [ ] แนะนำกิจกรรมสำหรับแต่ละจุดหมาย
+- [ ] ปุ่ม "เริ่มวางแผนเลย" → Auto-create trip
+- [ ] บันทึกผลลัพธ์ (เพื่อแนะนำในอนาคต)
+- [ ] Share results to social media
+
+**Components:**
+```
+- QuizContainer.tsx
+- QuizQuestion.tsx
+- QuizResult.tsx
+- DestinationMatchCard.tsx
+```
+
+**Algorithm:**
+```typescript
+interface QuizAnswer {
+  budget: number;
+  type: string[];
+  travelWith: string;
+  activities: string[];
+  duration: number;
+}
+
+calculateMatch(destination, answers): number {
+  // Score based on:
+  // - Budget fit (30%)
+  // - Type match (25%)
+  // - Activity match (25%)
+  // - Duration fit (10%)
+  // - Other factors (10%)
+}
+```
+
+#### 19. 🎨 Destination Gallery (Instagram-style)
+**Status:** Planned
+**Value:** Visual inspiration
+
+**Features:**
+- [ ] Masonry grid layout (Pinterest-style)
+- [ ] Beautiful images with hover overlay
+- [ ] Filter by tags (beach, mountain, city, etc.)
+- [ ] Quick view modal
+- [ ] Save to favorites
+- [ ] Share on social media
+- [ ] Infinite scroll
+- [ ] Image lazy loading
+- [ ] Search functionality
+
+#### 20. 🏷️ Destination Collections/Categories
+**Status:** Planned
+**Value:** จัดกลุ่มตามธีม เพื่อหาง่าย
+
+**Collections:**
+- [ ] "10 ชายหาดที่สวยที่สุดในไทย"
+- [ ] "เที่ยวภูเขาหน้าหนาว"
+- [ ] "จุดหมายสุดโรแมนติก"
+- [ ] "เหมาะกับครอบครัว"
+- [ ] "เที่ยวไทยงบ 5,000"
+- [ ] "Weekend Getaway ใกล้กรุงเทพ"
+- [ ] "เที่ยวต่างประเทศครั้งแรก"
+- [ ] "จุดหมายถ่ายรูปสวย"
+
+**Features:**
+- [ ] Collection cards with cover image
+- [ ] จำนวนจุดหมายในแต่ละ collection
+- [ ] Auto-curated based on destination tags
+- [ ] Manual curation support
+- [ ] SEO-optimized pages
+
+---
+
+### 🎯 Priority 3: Advanced Features (5-7 วัน)
+
+#### 21. 🗺️ Interactive Destination Map
+**Status:** Planned
+**Value:** Explore ผ่านแผนที่
+
+**Features:**
+- [ ] Interactive map of Thailand + World
+- [ ] Click province/country → Show destinations
+- [ ] Color-coded by category
+- [ ] Show current weather
+- [ ] Show budget range
+- [ ] Popularity indicators
+- [ ] Zoom & pan
+- [ ] Search on map
+- [ ] Filter overlay
+
+**Tech Stack:**
+- Mapbox GL JS / Leaflet
+- React Map GL
+
+#### 22. 🎲 Random Destination Generator
+**Status:** Planned
+**Value:** สนุก สำหรับคนตัดสินใจไม่ได้
+
+**Features:**
+- [ ] "สุ่มเลย!" button
+- [ ] Slot machine animation
+- [ ] แสดงจุดหมายแบบสุ่ม
+- [ ] ชอบ → "เริ่มวางแผน"
+- [ ] ไม่ชอบ → "สุ่มใหม่"
+- [ ] Filter before random (งบ, ประเภท, วัน)
+- [ ] History of randomized destinations
+
+#### 23. 📊 Destination Comparison Tool
+**Status:** Planned
+**Value:** เปรียบเทียบ 2-3 จุดหมาย
+
+**Features:**
+- [ ] Select 2-4 destinations to compare
+- [ ] Side-by-side table comparison
+- [ ] Compare: budget, weather, activities, popularity, best time
+- [ ] Visual charts (radar chart, bar chart)
+- [ ] Pros & cons list
+- [ ] "Best for you" recommendation
+- [ ] Export comparison as PDF
+
+#### 24. 🤖 Smart Destination Recommendations
+**Status:** Planned
+**Value:** "คนที่ชอบ X มักจะชอบ Y"
+
+**Features:**
+- [ ] Collaborative filtering algorithm
+- [ ] "คนที่ดู X มักดู Y" (87% similarity)
+- [ ] Based on user behavior (views, saves, bookings)
+- [ ] Personalized recommendations
+- [ ] "Because you viewed..." section
+- [ ] Similar destinations carousel
+
+---
+
+## 📊 Implementation Priority for Destination Features
+
+### Phase 1 (Week 1-2):
+1. ✅ Trending Destinations
+2. ✅ Budget Filter
+3. ✅ Seasonal Recommendations
+
+### Phase 2 (Week 3-4):
+4. ✅ Trip Inspiration Quiz (Main feature!)
+5. ✅ Destination Gallery
+6. ✅ Collections/Categories
+
+### Phase 3 (Week 5-6):
+7. ✅ Interactive Map
+8. ✅ Random Generator
+9. ✅ Comparison Tool
+10. ✅ Smart Recommendations
+
+---
+
 ## 🎯 Current Development Focus
 
-**Active Feature:** 📅 Interactive Calendar/Timeline View
+**Active Feature:** 🔥 Trending Destinations + 💰 Budget Filter + 📅 Seasonal Guide
 **Started:** 2025-10-12
-**Target Completion:** 2025-10-15
-**Status:** Development in progress
+**Target Completion:** 2025-10-14
+**Status:** Starting development
 
-**Next Up:** 💰 Smart Budget Tracker
+**Next Up:** 🧭 Trip Inspiration Quiz
