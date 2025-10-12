@@ -7,6 +7,12 @@
 
 import type { Destination } from "@/src/data/master/destinations.master";
 import { clusterDestinations, type Cluster } from "@/src/utils/map/clustering";
+import {
+  calculateDistance,
+  formatDistance,
+  calculateRouteDistance,
+  estimateTravelTime,
+} from "@/src/utils/map/distance";
 import { useMemo, useRef, useState } from "react";
 
 const maxZoom = 30;
@@ -39,6 +45,11 @@ export function RealWorldMap({
   const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
     []
   );
+  const [showMinimap, setShowMinimap] = useState(true);
+  const [measureMode, setMeasureMode] = useState(false);
+  const [measurePoints, setMeasurePoints] = useState<
+    Array<{ lat: number; lng: number; name: string }>
+  >([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -298,6 +309,38 @@ export function RealWorldMap({
     });
   };
 
+  // Handle measure mode
+  const toggleMeasurePoint = (destination: Destination) => {
+    setMeasurePoints((prev) => {
+      const exists = prev.find(
+        (p) =>
+          p.lat === destination.coordinates.lat &&
+          p.lng === destination.coordinates.lng
+      );
+
+      if (exists) {
+        // Remove point
+        return prev.filter((p) => p !== exists);
+      }
+
+      // Add point (max 10)
+      return [
+        ...prev,
+        {
+          lat: destination.coordinates.lat,
+          lng: destination.coordinates.lng,
+          name: destination.name,
+        },
+      ].slice(-10);
+    });
+  };
+
+  // Calculate total distance in measure mode
+  const totalMeasureDistance = useMemo(() => {
+    if (measurePoints.length < 2) return 0;
+    return calculateRouteDistance(measurePoints);
+  }, [measurePoints]);
+
   return (
     <div className="relative" style={{ height }}>
       {/* Controls */}
@@ -352,7 +395,10 @@ export function RealWorldMap({
           {enableClustering ? "🔵" : "⚪"} Cluster
         </button>
         <button
-          onClick={() => setShowRoutes(!showRoutes)}
+          onClick={() => {
+            setShowRoutes(!showRoutes);
+            if (showRoutes) setSelectedDestinations([]);
+          }}
           className={`px-4 py-2 rounded-lg shadow-lg transition-all text-sm font-medium ${
             showRoutes
               ? "bg-purple-500 text-white"
@@ -361,6 +407,31 @@ export function RealWorldMap({
           title="เปิด/ปิด เส้นทาง"
         >
           {showRoutes ? "🟣" : "⚪"} เส้นทาง
+        </button>
+        <button
+          onClick={() => {
+            setMeasureMode(!measureMode);
+            if (measureMode) setMeasurePoints([]);
+          }}
+          className={`px-4 py-2 rounded-lg shadow-lg transition-all text-sm font-medium ${
+            measureMode
+              ? "bg-orange-500 text-white"
+              : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+          }`}
+          title="วัดระยะทาง"
+        >
+          {measureMode ? "🟠" : "⚪"} วัดระยะ
+        </button>
+        <button
+          onClick={() => setShowMinimap(!showMinimap)}
+          className={`px-4 py-2 rounded-lg shadow-lg transition-all text-sm font-medium ${
+            showMinimap
+              ? "bg-teal-500 text-white"
+              : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+          }`}
+          title="เปิด/ปิด Minimap"
+        >
+          {showMinimap ? "🟦" : "⚪"} Minimap
         </button>
         {showRoutes && selectedDestinations.length > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg px-3 py-2 text-xs">
@@ -372,6 +443,29 @@ export function RealWorldMap({
               className="text-red-500 hover:text-red-700 text-xs"
             >
               ล้างทั้งหมด
+            </button>
+          </div>
+        )}
+        {measureMode && measurePoints.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg px-3 py-2 text-xs max-w-[150px]">
+            <div className="font-bold text-gray-900 dark:text-white mb-1">
+              📐 จุด: {measurePoints.length}
+            </div>
+            {measurePoints.length >= 2 && (
+              <>
+                <div className="text-orange-600 dark:text-orange-400 font-bold">
+                  {formatDistance(totalMeasureDistance)}
+                </div>
+                <div className="text-gray-500 dark:text-gray-400 text-[10px]">
+                  ⏱️ {estimateTravelTime(totalMeasureDistance)}
+                </div>
+              </>
+            )}
+            <button
+              onClick={() => setMeasurePoints([])}
+              className="text-red-500 hover:text-red-700 text-xs mt-1"
+            >
+              ล้าง
             </button>
           </div>
         )}
@@ -481,6 +575,81 @@ export function RealWorldMap({
           </svg>
         </div>
 
+        {/* Measure Lines Layer */}
+        {measureMode && measurePoints.length > 1 && (
+          <svg
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+              zIndex: 5,
+            }}
+          >
+            {measurePoints.slice(0, -1).map((point, index) => {
+              const point2 = measurePoints[index + 1];
+              const p1 = latLngToXY(point.lat, point.lng);
+              const p2 = latLngToXY(point2.lat, point2.lng);
+
+              const x1 = p1.x * zoom + offset.x;
+              const y1 = p1.y * zoom + offset.y;
+              const x2 = p2.x * zoom + offset.x;
+              const y2 = p2.y * zoom + offset.y;
+
+              const distance = calculateDistance(
+                point.lat,
+                point.lng,
+                point2.lat,
+                point2.lng
+              );
+
+              // Midpoint for label
+              const midX = (x1 + x2) / 2;
+              const midY = (y1 + y2) / 2;
+
+              return (
+                <g key={`measure-${index}`}>
+                  {/* Line */}
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="#f97316"
+                    strokeWidth="3"
+                    strokeDasharray="8,4"
+                  />
+                  {/* Distance label */}
+                  <g transform={`translate(${midX}, ${midY})`}>
+                    <rect
+                      x="-30"
+                      y="-12"
+                      width="60"
+                      height="24"
+                      fill="white"
+                      stroke="#f97316"
+                      strokeWidth="2"
+                      rx="4"
+                    />
+                    <text
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fontSize="11"
+                      fontWeight="bold"
+                      fill="#f97316"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      {formatDistance(distance)}
+                    </text>
+                  </g>
+                </g>
+              );
+            })}
+          </svg>
+        )}
+
         {/* Routes Layer */}
         {showRoutes && selectedDestinations.length > 1 && (
           <svg
@@ -578,18 +747,31 @@ export function RealWorldMap({
             const isHovered = hoveredId === dest.id;
             const isInRoute =
               showRoutes && selectedDestinations.includes(dest.id);
+            const isInMeasure =
+              measureMode &&
+              measurePoints.some(
+                (p) =>
+                  p.lat === dest.coordinates.lat &&
+                  p.lng === dest.coordinates.lng
+              );
             const size = isSingleDestination
               ? getMarkerSize(dest.popularityScore)
               : 10;
-            const color = isSingleDestination
+            
+            let color = isSingleDestination
               ? getMarkerColor(dest)
               : "#f59e0b";
+            
+            if (isInMeasure) color = "#f97316"; // Orange for measure
 
             return (
               <div
                 key={cluster.id}
                 onClick={(e) => {
-                  if (showRoutes && isSingleDestination) {
+                  if (measureMode && isSingleDestination) {
+                    e.stopPropagation();
+                    toggleMeasurePoint(dest);
+                  } else if (showRoutes && isSingleDestination) {
                     e.stopPropagation();
                     toggleDestinationForRoute(dest.id);
                   } else if (isSingleDestination) {
@@ -608,7 +790,9 @@ export function RealWorldMap({
                   top: markerY,
                   transform: isSingleDestination
                     ? `translate(-50%, -100%) scale(${
-                        isSelected || isHovered || isInRoute ? 1.3 : 1
+                        isSelected || isHovered || isInRoute || isInMeasure
+                          ? 1.3
+                          : 1
                       })`
                     : `translate(-50%, -50%) scale(${isHovered ? 1.2 : 1})`,
                   transformOrigin: isSingleDestination
@@ -646,13 +830,19 @@ export function RealWorldMap({
                     {/* Center dot */}
                     <circle cx="12" cy="8" r="3" fill="white" />
 
-                    {/* Pulse animation for selected/route */}
-                    {(isSelected || isInRoute) && (
+                    {/* Pulse animation for selected/route/measure */}
+                    {(isSelected || isInRoute || isInMeasure) && (
                       <circle
                         cx="12"
                         cy="8"
                         r="6"
-                        fill={isInRoute ? "#a855f7" : color}
+                        fill={
+                          isInMeasure
+                            ? "#f97316"
+                            : isInRoute
+                            ? "#a855f7"
+                            : color
+                        }
                         opacity="0.4"
                         className="animate-ping"
                       />
@@ -668,6 +858,35 @@ export function RealWorldMap({
                         stroke="#a855f7"
                         strokeWidth="2"
                       />
+                    )}
+
+                    {/* Measure indicator */}
+                    {isInMeasure && (
+                      <>
+                        <circle
+                          cx="12"
+                          cy="8"
+                          r="4"
+                          fill="none"
+                          stroke="#f97316"
+                          strokeWidth="2"
+                        />
+                        <text
+                          x="12"
+                          y="8"
+                          textAnchor="middle"
+                          dominantBaseline="central"
+                          fontSize="10"
+                          fontWeight="bold"
+                          fill="#f97316"
+                        >
+                          {measurePoints.findIndex(
+                            (p) =>
+                              p.lat === dest.coordinates.lat &&
+                              p.lng === dest.coordinates.lng
+                          ) + 1}
+                        </text>
+                      </>
                     )}
                   </svg>
                 ) : (
@@ -804,6 +1023,63 @@ export function RealWorldMap({
         </div>
       )}
 
+      {/* Minimap */}
+      {showMinimap && (
+        <div className="absolute top-4 right-20 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-2 border-2 border-gray-300 dark:border-gray-600">
+          <div className="w-40 h-28 relative bg-gradient-to-br from-sky-100 to-blue-100 dark:from-gray-700 dark:to-gray-600 rounded overflow-hidden">
+            {/* Mini world map */}
+            <svg
+              viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+              width="100%"
+              height="100%"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <image
+                href="/world.svg"
+                width={svgWidth}
+                height={svgHeight}
+                opacity="0.3"
+              />
+              {/* Show all destinations as tiny dots */}
+              {filteredDestinations.map((dest) => {
+                const { x, y } = latLngToXY(
+                  dest.coordinates.lat,
+                  dest.coordinates.lng
+                );
+                return (
+                  <circle
+                    key={dest.id}
+                    cx={x}
+                    cy={y}
+                    r="3"
+                    fill={getMarkerColor(dest)}
+                    opacity="0.8"
+                  />
+                );
+              })}
+              {/* Viewport box */}
+              <rect
+                x={-offset.x / zoom}
+                y={-offset.y / zoom}
+                width={
+                  (containerRef.current?.clientWidth || 800) / zoom
+                }
+                height={
+                  (containerRef.current?.clientHeight || 600) / zoom
+                }
+                fill="none"
+                stroke="#3b82f6"
+                strokeWidth="8"
+                opacity="0.7"
+              />
+            </svg>
+            <div className="absolute bottom-1 left-1 text-[8px] font-bold text-gray-600 dark:text-gray-300 bg-white/80 dark:bg-gray-800/80 px-1 rounded">
+              {zoom.toFixed(1)}x
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Instructions */}
       <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
         <p>
@@ -813,8 +1089,8 @@ export function RealWorldMap({
           <strong> 📋 คลิกรายการเพื่อโฟกัส</strong>
         </p>
         <p className="text-xs mt-1 text-gray-500">
-          แผนที่ SVG จริง + พิกัด Lat/Lng จาก Master Data · กรองตามภูมิภาค ·
-          ค้นหาจุดหมาย
+          แผนที่ SVG จริง + พิกัด Lat/Lng · กรอง/ค้นหา · Clustering · เส้นทาง ·
+          📐 วัดระยะ · 🗺️ Minimap
         </p>
       </div>
     </div>
