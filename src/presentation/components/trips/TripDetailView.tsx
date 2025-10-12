@@ -296,22 +296,28 @@ export function TripDetailView({ viewModel }: TripDetailViewProps) {
                     {trip.isPublic ? "🌍 สาธารณะ" : "🔒 ส่วนตัว"}
                   </div>
                 </div>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="mt-6 space-y-3">
-                <Link
-                  href={`/trip-planner?tripId=${trip.id}`}
-                  className="block w-full py-3 bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold text-center rounded-lg hover:shadow-lg transition-all"
-                >
-                  แก้ไขทริป
-                </Link>
-                <Link
-                  href="/trips"
-                  className="block w-full py-3 border-2 border-sky-400 text-sky-600 dark:text-sky-400 font-bold text-center rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-all"
-                >
-                  ทริปอื่นๆ
-                </Link>
+                {/* Action Buttons */}
+                <div className="mt-6 space-y-3">
+                  <Link
+                    href={`/trips/${trip.id}/timeline`}
+                    className="block w-full py-3 bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold text-center rounded-lg hover:shadow-lg transition-all"
+                  >
+                    📅 ดู Timeline
+                  </Link>
+                  <Link
+                    href={`/trip-planner?tripId=${trip.id}`}
+                    className="block w-full py-3 border-2 border-sky-400 text-sky-600 dark:text-sky-400 font-bold text-center rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-all"
+                  >
+                    ✏️ แก้ไขทริป
+                  </Link>
+                  <Link
+                    href="/accommodations"
+                    className="block w-full py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold text-center rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                  >
+                    🏨 ค้นหาที่พัก
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
