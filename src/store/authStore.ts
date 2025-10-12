@@ -5,7 +5,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { USERS } from '@/src/data/mock/users.mock';
+import { MOCK_PASSWORDS, getUserByEmail } from '@/src/data/mock/users.mock';
 
 export interface User {
   id: string;
@@ -26,13 +26,6 @@ interface AuthState {
   setLoading: (loading: boolean) => void;
 }
 
-// Mock passwords for existing users (for testing only)
-const MOCK_PASSWORDS: Record<string, string> = {
-  'somchai@example.com': 'password123',
-  'sarah.johnson@example.com': 'password123',
-  'admin@triply.com': 'admin123',
-};
-
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -43,14 +36,17 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, password: string) => {
         set({ isLoading: true });
         
-        // Simulate API call
+        // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Find user in mock database
-        const foundUser = USERS.find(u => u.email === email);
+        // Find user in mock database using helper function
+        const foundUser = getUserByEmail(email);
         const correctPassword = MOCK_PASSWORDS[email];
 
         if (foundUser && password === correctPassword) {
+          // Update last login time
+          foundUser.lastLogin = new Date().toISOString();
+          
           const user: User = {
             id: foundUser.id,
             email: foundUser.email,
@@ -73,17 +69,17 @@ export const useAuthStore = create<AuthState>()(
       register: async (email: string, password: string, displayName: string) => {
         set({ isLoading: true });
         
-        // Simulate API call
+        // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Check if email already exists
-        const existingUser = USERS.find(u => u.email === email);
+        // Check if email already exists using helper function
+        const existingUser = getUserByEmail(email);
         if (existingUser) {
           set({ isLoading: false });
           return false;
         }
 
-        // Create new user
+        // Create new user (in real app, this would be saved to database)
         const newUser: User = {
           id: `user-${Date.now()}`,
           email,
@@ -91,7 +87,7 @@ export const useAuthStore = create<AuthState>()(
           avatarUrl: '/avatars/default.jpg',
         };
 
-        // Add password to mock passwords (in real app, this would be API call)
+        // Store password in mock passwords map
         MOCK_PASSWORDS[email] = password;
 
         set({

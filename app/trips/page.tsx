@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/src/store/authStore";
-import { TripsPresenter } from "@/src/presentation/presenters/trips/TripsPresenter";
 import { TripsView } from "@/src/presentation/components/trips/TripsView";
 import type { TripsViewModel } from "@/src/presentation/presenters/trips/TripsPresenter";
+import { TripsPresenter } from "@/src/presentation/presenters/trips/TripsPresenter";
+import { useAuthStore } from "@/src/store/authStore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function TripsPage() {
   const router = useRouter();
@@ -40,6 +40,10 @@ export default function TripsPage() {
         </div>
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return <TripsView userId={user!.id} initialViewModel={viewModel} />;

@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/src/store/authStore";
-import { UserDashboardPresenter } from "@/src/presentation/presenters/user-dashboard/UserDashboardPresenter";
 import { UserDashboardView } from "@/src/presentation/components/user-dashboard/UserDashboardView";
 import type { UserDashboardViewModel } from "@/src/presentation/presenters/user-dashboard/UserDashboardPresenter";
+import { UserDashboardPresenter } from "@/src/presentation/presenters/user-dashboard/UserDashboardPresenter";
+import { useAuthStore } from "@/src/store/authStore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
-  const [viewModel, setViewModel] = useState<UserDashboardViewModel | null>(null);
+  const [viewModel, setViewModel] = useState<UserDashboardViewModel | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -40,6 +42,10 @@ export default function DashboardPage() {
         </div>
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return <UserDashboardView initialViewModel={viewModel} />;

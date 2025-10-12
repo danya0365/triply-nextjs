@@ -62,11 +62,18 @@ export default function LoginPage() {
           {/* Demo Accounts Info */}
           <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
             <p className="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-2">
-              🔐 บัญชีทดสอบ:
+              🔐 บัญชีทดสอบ (ทั้งหมด 50+ users):
             </p>
             <div className="text-xs text-blue-700 dark:text-blue-400 space-y-1">
+              <div className="font-semibold mb-1">🇹🇭 Thai User:</div>
               <div>📧 somchai@example.com</div>
               <div>🔑 password123</div>
+              <div className="mt-2 font-semibold mb-1">🌍 International User:</div>
+              <div>📧 sarah.johnson@example.com</div>
+              <div>🔑 password123</div>
+              <div className="mt-2 text-blue-600 dark:text-blue-300">
+                💡 หรือใช้ user3@example.com ถึง user50@example.com (password: password123)
+              </div>
             </div>
           </div>
 

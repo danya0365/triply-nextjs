@@ -108,3 +108,17 @@ export default USERS;
 
 export const getUserById = (id: string) => USERS.find(u => u.id === id);
 export const getUserByEmail = (email: string) => USERS.find(u => u.email === email);
+
+/**
+ * Mock passwords for testing
+ * In production, passwords would be hashed and stored securely
+ */
+export const MOCK_PASSWORDS: Record<string, string> = {
+  'somchai@example.com': 'password123',
+  'sarah.johnson@example.com': 'password123',
+};
+
+// Generate passwords for all other users (all use "password123" for testing)
+for (let i = 3; i <= 50; i++) {
+  MOCK_PASSWORDS[`user${i}@example.com`] = 'password123';
+}

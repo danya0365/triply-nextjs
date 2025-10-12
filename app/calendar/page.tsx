@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/src/store/authStore";
-import { CalendarPresenter } from "@/src/presentation/presenters/calendar/CalendarPresenter";
 import { CalendarView } from "@/src/presentation/components/calendar/CalendarView";
 import type { CalendarViewModel } from "@/src/presentation/presenters/calendar/CalendarPresenter";
+import { CalendarPresenter } from "@/src/presentation/presenters/calendar/CalendarPresenter";
+import { useAuthStore } from "@/src/store/authStore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function CalendarPage() {
   const router = useRouter();
@@ -24,7 +24,11 @@ export default function CalendarPage() {
     const loadCalendar = async () => {
       const presenter = new CalendarPresenter();
       const now = new Date();
-      const data = await presenter.getViewModel(user.id, now.getMonth(), now.getFullYear());
+      const data = await presenter.getViewModel(
+        user.id,
+        now.getMonth(),
+        now.getFullYear()
+      );
       setViewModel(data);
       setIsLoading(false);
     };
@@ -41,6 +45,10 @@ export default function CalendarPage() {
         </div>
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return <CalendarView userId={user!.id} initialViewModel={viewModel} />;
