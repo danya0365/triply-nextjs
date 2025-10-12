@@ -4,6 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import type { DestinationsViewModel } from "@/src/presentation/presenters/destinations/DestinationsPresenter";
 import type { Destination } from "@/src/data/master/destinations.master";
+import { TrendingDestinationsSection } from "./TrendingDestinationsSection";
+import { BudgetDestinationFinder } from "./BudgetDestinationFinder";
+import { SeasonalGuide } from "./SeasonalGuide";
 
 interface DestinationsViewProps {
   initialViewModel: DestinationsViewModel;
@@ -46,6 +49,28 @@ export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400">
             ค้นพบ {viewModel.totalCount} จุดหมายยอดนิยมในไทยและเอเชีย
+          </p>
+        </div>
+
+        {/* NEW: Trending Destinations */}
+        <TrendingDestinationsSection destinations={viewModel.destinations} />
+
+        {/* NEW: Budget Destination Finder */}
+        <BudgetDestinationFinder destinations={viewModel.destinations} />
+
+        {/* NEW: Seasonal Guide */}
+        <SeasonalGuide destinations={viewModel.destinations} />
+
+        {/* Divider */}
+        <div className="my-12 border-t-2 border-gray-200 dark:border-gray-700"></div>
+
+        {/* Explore All Section */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            🔍 สำรวจทั้งหมด
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            ค้นหาและกรองจุดหมายตามที่คุณต้องการ
           </p>
         </div>
 
