@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { ThemeToggle } from "../common/ThemeToggle";
 import { useAuthStore } from "@/src/store/authStore";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ThemeToggle } from "../common/ThemeToggle";
 
 /**
  * Main navigation bar with links and user actions
@@ -24,18 +24,18 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: "หน้าแรก", icon: "🏠" },
-    { 
-      href: "/destinations", 
-      label: "สำรวจจุดหมาย", 
+    {
+      href: "/destinations",
+      label: "สำรวจจุดหมาย",
       icon: "🌍",
-      featured: true // Highlight this link
+      featured: true, // Highlight this link
     },
     { href: "/trip-planner", label: "วางแผนทริป", icon: "🗺️" },
     { href: "/accommodations", label: "ค้นหาที่พัก", icon: "🏨" },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
+    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
