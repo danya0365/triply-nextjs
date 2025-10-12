@@ -6,6 +6,7 @@
 import { USERS, type User } from "@/src/data/mock/users.mock";
 import { getTripsByCreator } from "@/src/data/mock/trips.mock";
 import { ACCOMMODATIONS } from "@/src/data/mock/accommodations.mock";
+import { getUnlockedAchievements } from "@/src/data/mock/gamification.mock";
 
 export interface BookingItem {
   id: string;
@@ -77,8 +78,8 @@ export class UserDashboardPresenter {
     // Generate mock bookings
     const bookings = this.generateMockBookings();
 
-    // Generate recent activities
-    const recentActivities = this.generateMockActivities();
+    // Generate recent activities based on real data
+    const recentActivities = this.generateMockActivities(userId);
 
     // Calculate stats
     const upcomingBookings = bookings.filter((b) => b.status === "upcoming").length;
@@ -145,51 +146,71 @@ export class UserDashboardPresenter {
   }
 
   /**
-   * Generate mock activities
+   * Generate mock activities based on real data
    */
-  private generateMockActivities(): ActivityItem[] {
-    return [
-      {
-        id: "activity-001",
-        type: "achievement",
-        icon: "🏆",
-        title: "ปลดล็อคความสำเร็จใหม่",
-        description: 'คุณได้รับ "นักเดินทางตัวยง"',
-        timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-      },
-      {
-        id: "activity-002",
-        type: "booking",
-        icon: "🏨",
-        title: "จองที่พักสำเร็จ",
-        description: "Luxury Beach Resort Phuket - 3 คืน",
-        timestamp: new Date(Date.now() - 86400000 * 1).toISOString(),
-      },
-      {
-        id: "activity-003",
+  private generateMockActivities(userId: string): ActivityItem[] {
+    const activities: ActivityItem[] = [];
+    
+    // Get user's trips
+    const userTrips = getTripsByCreator(userId);
+    
+    // Get unlocked achievements
+    const achievements = getUnlockedAchievements();
+    
+    // Add recent trip activities
+    if (userTrips.length > 0) {
+      const recentTrip = userTrips[0];
+      activities.push({
+        id: "activity-trip-001",
         type: "trip",
         icon: "🗺️",
         title: "สร้างทริปใหม่",
-        description: "ฮันนีมูนภูเก็ต - 7 วันแสนหวาน",
+        description: recentTrip.name,
+        timestamp: recentTrip.updatedAt,
+      });
+    }
+    
+    // Add achievement activities
+    if (achievements.length > 0) {
+      const recentAchievement = achievements[achievements.length - 1];
+      activities.push({
+        id: `activity-achievement-${recentAchievement.id}`,
+        type: "achievement",
+        icon: "🏆",
+        title: "ปลดล็อคความสำเร็จใหม่",
+        description: `คุณได้รับ "${recentAchievement.name}"`,
+        timestamp: recentAchievement.unlockedAt || new Date(Date.now() - 86400000).toISOString(),
+      });
+    }
+    
+    // Add mock booking activity
+    if (ACCOMMODATIONS.length > 0) {
+      activities.push({
+        id: "activity-booking-001",
+        type: "booking",
+        icon: "🏨",
+        title: "จองที่พักสำเร็จ",
+        description: `${ACCOMMODATIONS[0].name} - 3 คืน`,
         timestamp: new Date(Date.now() - 86400000 * 2).toISOString(),
-      },
-      {
-        id: "activity-004",
+      });
+    }
+    
+    // Add mock review activity
+    if (ACCOMMODATIONS.length > 1) {
+      activities.push({
+        id: "activity-review-001",
         type: "review",
         icon: "⭐",
         title: "เขียนรีวิว",
-        description: "Mountain View Hotel Chiang Mai - 5 ดาว",
-        timestamp: new Date(Date.now() - 86400000 * 3).toISOString(),
-      },
-      {
-        id: "activity-005",
-        type: "achievement",
-        icon: "🎯",
-        title: "ทำภารกิจสำเร็จ",
-        description: "จองที่พัก 3 คืนติดต่อกัน +500 คะแนน",
-        timestamp: new Date(Date.now() - 86400000 * 5).toISOString(),
-      },
-    ];
+        description: `${ACCOMMODATIONS[1].name} - 5 ดาว`,
+        timestamp: new Date(Date.now() - 86400000 * 4).toISOString(),
+      });
+    }
+    
+    // Sort by timestamp (newest first)
+    return activities.sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    ).slice(0, 5);
   }
 
   /**

@@ -2,24 +2,31 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ThemeToggle } from "../common/ThemeToggle";
+import { useAuthStore } from "@/src/store/authStore";
 
 /**
  * Main navigation bar with links and user actions
  */
 export function Navbar() {
+  const router = useRouter();
+  const { isAuthenticated, user, logout } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  // Mock user data - will be replaced with real authentication
-  const isAuthenticated = false;
+  const handleLogout = () => {
+    logout();
+    setIsUserMenuOpen(false);
+    setIsMobileMenuOpen(false);
+    router.push("/");
+  };
 
   const navLinks = [
     { href: "/", label: "หน้าแรก", icon: "🏠" },
     { href: "/accommodations", label: "ค้นหาที่พัก", icon: "🏨" },
     { href: "/trip-planner", label: "วางแผนทริป", icon: "🗺️" },
-    { href: "/rewards", label: "รางวัล", icon: "🎁" },
-    { href: "/about", label: "เกี่ยวกับเรา", icon: "ℹ️" },
+    { href: "/gamification", label: "Gamification", icon: "🎮" },
   ];
 
   return (
@@ -68,9 +75,12 @@ export function Navbar() {
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                     className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-sky-300 to-violet-300 rounded-full flex items-center justify-center text-white font-bold">
-                      U
+                    <div className="w-8 h-8 bg-gradient-to-br from-sky-300 to-violet-300 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      {user?.displayName?.[0] || "U"}
                     </div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 max-w-[100px] truncate hidden lg:block">
+                      {user?.displayName || "User"}
+                    </span>
                     <span className="text-sm">▼</span>
                   </button>
 
@@ -101,7 +111,10 @@ export function Navbar() {
                         🗺️ ทริปของฉัน
                       </Link>
                       <hr className="my-2 border-gray-200 dark:border-gray-700" />
-                      <button className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600"
+                      >
                         🚪 ออกจากระบบ
                       </button>
                     </div>
@@ -188,7 +201,10 @@ export function Navbar() {
                 >
                   👤 โปรไฟล์
                 </Link>
-                <button className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-red-600 dark:text-red-400">
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-red-600 dark:text-red-400"
+                >
                   🚪 ออกจากระบบ
                 </button>
               </>
