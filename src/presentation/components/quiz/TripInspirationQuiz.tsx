@@ -1,0 +1,389 @@
+"use client";
+
+import { useState } from "react";
+import { TRIP_QUIZ_QUESTIONS, type QuizAnswers } from "@/src/data/quiz/tripQuiz";
+import { getTopMatches, type DestinationMatch } from "@/src/utils/quizMatcher";
+import type { Destination } from "@/src/data/master/destinations.master";
+import Link from "next/link";
+
+interface TripInspirationQuizProps {
+  destinations: Destination[];
+}
+
+export function TripInspirationQuiz({ destinations }: TripInspirationQuizProps) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [answers, setAnswers] = useState<Partial<QuizAnswers>>({
+    types: [],
+    activities: [],
+  });
+  const [results, setResults] = useState<DestinationMatch[] | null>(null);
+  const [isStarted, setIsStarted] = useState(false);
+
+  const currentQuestion = TRIP_QUIZ_QUESTIONS[currentStep];
+  const totalSteps = TRIP_QUIZ_QUESTIONS.length;
+  const progress = ((currentStep + 1) / totalSteps) * 100;
+
+  const handleStart = () => {
+    setIsStarted(true);
+    setCurrentStep(0);
+    setAnswers({ types: [], activities: [] });
+    setResults(null);
+  };
+
+  const handleAnswer = (questionId: string, value: string | number) => {
+    const newAnswers = { ...answers };
+
+    switch (questionId) {
+      case "budget":
+        newAnswers.budget = value as number;
+        break;
+      case "type":
+        // Multiple select
+        const currentTypes = newAnswers.types || [];
+        const typeValue = value as string;
+        if (currentTypes.includes(typeValue)) {
+          newAnswers.types = currentTypes.filter((t) => t !== typeValue);
+        } else {
+          newAnswers.types = [...currentTypes, typeValue];
+        }
+        return setAnswers(newAnswers); // Don't auto-advance for multi-select
+      case "companion":
+        newAnswers.travelWith = value as string;
+        break;
+      case "activities":
+        // Multiple select
+        const currentActivities = newAnswers.activities || [];
+        const activityValue = value as string;
+        if (currentActivities.includes(activityValue)) {
+          newAnswers.activities = currentActivities.filter((a) => a !== activityValue);
+        } else {
+          newAnswers.activities = [...currentActivities, activityValue];
+        }
+        return setAnswers(newAnswers); // Don't auto-advance for multi-select
+      case "duration":
+        newAnswers.duration = value as number;
+        break;
+    }
+
+    setAnswers(newAnswers);
+
+    // Auto-advance for single-select questions
+    if (currentStep < totalSteps - 1) {
+      setTimeout(() => setCurrentStep(currentStep + 1), 300);
+    } else {
+      // Last question - show results
+      setTimeout(() => {
+        const matches = getTopMatches(destinations, newAnswers as QuizAnswers, 5);
+        setResults(matches);
+      }, 300);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      // Calculate results
+      const matches = getTopMatches(destinations, answers as QuizAnswers, 5);
+      setResults(matches);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleRestart = () => {
+    setIsStarted(false);
+    setCurrentStep(0);
+    setAnswers({ types: [], activities: [] });
+    setResults(null);
+  };
+
+  const isMultiSelect = currentQuestion?.id === "type" || currentQuestion?.id === "activities";
+  const canProceed = isMultiSelect
+    ? (currentQuestion.id === "type" && (answers.types?.length || 0) > 0) ||
+      (currentQuestion.id === "activities" && (answers.activities?.length || 0) > 0)
+    : true;
+
+  // Start Screen
+  if (!isStarted) {
+    return (
+      <section className="mb-12">
+        <div className="bg-gradient-to-br from-violet-50 via-sky-50 to-emerald-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-2xl p-8 md:p-12 shadow-xl">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="text-6xl mb-6 animate-bounce">🧭</div>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              ไม่รู้จะไปไหนดี?
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+              ตอบคำถามแค่ 5 ข้อ เราจะหาจุดหมายที่ใช่สำหรับคุณ
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+              {["💰", "🏖️", "👨‍👩‍👧", "🤿", "📅"].map((icon, index) => (
+                <div
+                  key={index}
+                  className="bg-white dark:bg-gray-700 rounded-xl p-4 shadow-md"
+                >
+                  <div className="text-3xl mb-2">{icon}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                    {["งบประมาณ", "บรรยากาศ", "ไปกับใคร", "กิจกรรม", "จำนวนวัน"][index]}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={handleStart}
+              className="bg-gradient-to-r from-sky-400 to-violet-400 text-white text-xl font-bold px-12 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all"
+            >
+              เริ่มทำแบบทดสอบ →
+            </button>
+
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+              ใช้เวลาแค่ 1 นาที
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Results Screen
+  if (results) {
+    return (
+      <section className="mb-12">
+        <div className="bg-gradient-to-br from-violet-50 via-sky-50 to-emerald-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-2xl p-8 shadow-xl">
+          <div className="text-center mb-8">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              เราหาจุดหมายที่เหมาะกับคุณแล้ว!
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              จาก {destinations.length} จุดหมาย เราเลือกมาแล้ว {results.length} ที่ที่เหมาะสุด
+            </p>
+          </div>
+
+          <div className="space-y-6 mb-8">
+            {results.map((match, index) => (
+              <DestinationMatchCard key={match.destination.id} match={match} rank={index + 1} />
+            ))}
+          </div>
+
+          <div className="text-center space-y-4">
+            <button
+              onClick={handleRestart}
+              className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-bold px-8 py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+            >
+              ทำใหม่อีกครั้ง
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Quiz Screen
+  return (
+    <section className="mb-12">
+      <div className="bg-gradient-to-br from-violet-50 via-sky-50 to-emerald-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-2xl p-8 shadow-xl">
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              คำถามที่ {currentStep + 1} จาก {totalSteps}
+            </span>
+            <span className="text-sm font-medium text-sky-600 dark:text-sky-400">
+              {Math.round(progress)}%
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+            <div
+              className="bg-gradient-to-r from-sky-400 to-violet-400 h-full rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Question */}
+        <div className="mb-8">
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            {currentQuestion.question}
+          </h3>
+          {isMultiSelect && (
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              (เลือกได้หลายข้อ)
+            </p>
+          )}
+        </div>
+
+        {/* Options */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          {currentQuestion.options.map((option) => {
+            const isSelected =
+              currentQuestion.id === "type"
+                ? answers.types?.includes(option.value as string)
+                : currentQuestion.id === "activities"
+                ? answers.activities?.includes(option.value as string)
+                : answers[currentQuestion.id as keyof QuizAnswers] === option.value;
+
+            return (
+              <button
+                key={option.id}
+                onClick={() => handleAnswer(currentQuestion.id, option.value)}
+                className={`p-6 rounded-xl border-2 text-left transition-all hover:scale-105 ${
+                  isSelected
+                    ? "border-sky-400 bg-sky-50 dark:bg-sky-900/30 shadow-lg"
+                    : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-sky-300"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-4xl">{option.icon}</div>
+                  <div className="flex-1">
+                    <div className="font-bold text-lg text-gray-900 dark:text-white mb-1">
+                      {option.label}
+                    </div>
+                    {option.description && (
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        {option.description}
+                      </div>
+                    )}
+                  </div>
+                  {isSelected && (
+                    <div className="text-sky-500 text-2xl">✓</div>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center">
+          <button
+            onClick={handlePrev}
+            disabled={currentStep === 0}
+            className="px-6 py-3 rounded-xl font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            ← ย้อนกลับ
+          </button>
+
+          {isMultiSelect && (
+            <button
+              onClick={handleNext}
+              disabled={!canProceed}
+              className="bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold px-8 py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {currentStep === totalSteps - 1 ? "ดูผลลัพธ์" : "ถัดไป"} →
+            </button>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Destination Match Card Component
+interface DestinationMatchCardProps {
+  match: DestinationMatch;
+  rank: number;
+}
+
+function DestinationMatchCard({ match, rank }: DestinationMatchCardProps) {
+  const { destination, matchPercentage, reasons, highlights } = match;
+  const isTopMatch = rank === 1;
+
+  return (
+    <Link
+      href={`/destinations/${destination.slug}`}
+      className={`block bg-white dark:bg-gray-700 rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all ${
+        isTopMatch ? "border-4 border-yellow-400" : "border-2 border-gray-200 dark:border-gray-600"
+      }`}
+    >
+      {isTopMatch && (
+        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-center font-bold py-2 px-4 rounded-lg mb-4">
+          🏆 แนะนำสำหรับคุณ!
+        </div>
+      )}
+
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left: Rank & Match */}
+        <div className="flex-shrink-0 text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-sky-400 to-violet-400 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-2">
+            {rank}
+          </div>
+          <div className="text-3xl font-bold text-sky-600 dark:text-sky-400">
+            {matchPercentage}%
+          </div>
+          <div className="text-xs text-gray-600 dark:text-gray-400">เหมาะสม</div>
+        </div>
+
+        {/* Right: Destination Info */}
+        <div className="flex-1">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            {destination.name}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-3">
+            {destination.description.slice(0, 150)}...
+          </p>
+
+          {/* Reasons */}
+          <div className="flex flex-wrap gap-2 mb-3">
+            {reasons.map((reason, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm rounded-full"
+              >
+                ✓ {reason}
+              </span>
+            ))}
+          </div>
+
+          {/* Highlights */}
+          {highlights.length > 0 && (
+            <div className="mb-3">
+              <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                กิจกรรมแนะนำ:
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {highlights.map((highlight, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm rounded-full"
+                  >
+                    {highlight}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Budget */}
+          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <span className="flex items-center gap-1">
+              <span>💰</span>
+              <span>
+                ฿{destination.averageBudget.min.toLocaleString()}-
+                {destination.averageBudget.max.toLocaleString()}
+              </span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span>⭐</span>
+              <span>Popularity: {destination.popularityScore}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="flex-shrink-0 flex items-center">
+          <div className="bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold px-6 py-3 rounded-xl hover:shadow-lg transition-all">
+            เริ่มวางแผน →
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}

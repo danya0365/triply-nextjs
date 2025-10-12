@@ -7,6 +7,7 @@ import type { Destination } from "@/src/data/master/destinations.master";
 import { TrendingDestinationsSection } from "./TrendingDestinationsSection";
 import { BudgetDestinationFinder } from "./BudgetDestinationFinder";
 import { SeasonalGuide } from "./SeasonalGuide";
+import { TripInspirationQuiz } from "../quiz/TripInspirationQuiz";
 
 interface DestinationsViewProps {
   initialViewModel: DestinationsViewModel;
@@ -51,6 +52,9 @@ export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
             ค้นพบ {viewModel.totalCount} จุดหมายยอดนิยมในไทยและเอเชีย
           </p>
         </div>
+
+        {/* NEW: Trip Inspiration Quiz - MAIN FEATURE! */}
+        <TripInspirationQuiz destinations={viewModel.destinations} />
 
         {/* NEW: Trending Destinations */}
         <TrendingDestinationsSection destinations={viewModel.destinations} />

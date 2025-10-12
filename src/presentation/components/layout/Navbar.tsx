@@ -24,9 +24,14 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: "หน้าแรก", icon: "🏠" },
-    { href: "/accommodations", label: "ค้นหาที่พัก", icon: "🏨" },
+    { 
+      href: "/destinations", 
+      label: "สำรวจจุดหมาย", 
+      icon: "🌍",
+      featured: true // Highlight this link
+    },
     { href: "/trip-planner", label: "วางแผนทริป", icon: "🗺️" },
-    { href: "/gamification", label: "Gamification", icon: "🎮" },
+    { href: "/accommodations", label: "ค้นหาที่พัก", icon: "🏨" },
   ];
 
   return (
@@ -49,8 +54,13 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2"
+                className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
+                  link.featured
+                    ? "bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold hover:shadow-lg hover:scale-105"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
               >
+                <span className="text-lg">{link.icon}</span>
                 <span>{link.label}</span>
               </Link>
             ))}
@@ -115,6 +125,12 @@ export function Navbar() {
                         className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         🗺️ ทริปของฉัน
+                      </Link>
+                      <Link
+                        href="/gamification"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        🎮 Gamification
                       </Link>
                       <hr className="my-2 border-gray-200 dark:border-gray-700" />
                       <button
@@ -184,10 +200,14 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+                className={`block px-4 py-3 rounded-lg ${
+                  link.featured
+                    ? "bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold mb-2"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <span className="mr-2">{link.icon}</span>
+                <span className="mr-2 text-lg">{link.icon}</span>
                 {link.label}
               </Link>
             ))}
@@ -221,6 +241,20 @@ export function Navbar() {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   📅 ปฏิทิน
+                </Link>
+                <Link
+                  href="/trips"
+                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  🗺️ ทริปของฉัน
+                </Link>
+                <Link
+                  href="/gamification"
+                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  🎮 Gamification
                 </Link>
                 <button
                   onClick={handleLogout}
