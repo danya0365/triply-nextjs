@@ -64,10 +64,11 @@ export function useTripPlannerPresenter(initialViewModel: TripPlannerViewModel) 
 
   const handleCreateTrip = useCallback(async (data: Partial<Trip>) => {
     try {
-      // TODO: Call API to create trip
-      console.log("Creating trip:", data);
+      // In a real app, this would call an API
+      // For now, we'll just redirect to trip planner with the data
+      const tripData = encodeURIComponent(JSON.stringify(data));
+      window.location.href = `/trip-planner?new=true&data=${tripData}`;
       setShowCreateModal(false);
-      // TODO: Refresh trips list
     } catch (err) {
       setError("ไม่สามารถสร้างทริปได้");
       console.error("Error creating trip:", err);
@@ -88,9 +89,33 @@ export function useTripPlannerPresenter(initialViewModel: TripPlannerViewModel) 
   // Clone trip
   const handleCloneTrip = useCallback(async (trip: Trip) => {
     try {
-      // TODO: Call API to clone trip
-      console.log("Cloning trip:", trip.id);
-      // TODO: Refresh trips list
+      // Create a copy of the trip with modified name and dates
+      const today = new Date();
+      const nextWeek = new Date(today);
+      nextWeek.setDate(today.getDate() + 7);
+      const endDate = new Date(nextWeek);
+      endDate.setDate(nextWeek.getDate() + trip.durationDays - 1);
+
+      const clonedTrip: Partial<Trip> = {
+        name: `${trip.name} (สำเนา)`,
+        description: trip.description,
+        themeId: trip.themeId,
+        destinationIds: [...trip.destinationIds],
+        startDate: nextWeek.toISOString().split("T")[0],
+        endDate: endDate.toISOString().split("T")[0],
+        durationDays: trip.durationDays,
+        numAdults: trip.numAdults,
+        numChildren: trip.numChildren,
+        totalBudget: trip.totalBudget,
+        planningStage: "planning",
+        isPublic: false,
+        currency: trip.currency,
+        completionPercentage: 0,
+      };
+
+      // Redirect to trip planner with cloned data
+      const tripData = encodeURIComponent(JSON.stringify(clonedTrip));
+      window.location.href = `/trip-planner?clone=true&data=${tripData}`;
     } catch (err) {
       setError("ไม่สามารถคัดลอกทริปได้");
       console.error("Error cloning trip:", err);

@@ -3,19 +3,21 @@ import { TripDetailView } from "@/src/presentation/components/trips/TripDetailVi
 import { notFound } from "next/navigation";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
   const presenter = await TripDetailPresenterFactory.createServer();
-  return presenter.generateMetadata(params.id);
+  return presenter.generateMetadata(id);
 }
 
 export default async function TripDetailPage({ params }: PageProps) {
+  const { id } = await params;
   const presenter = await TripDetailPresenterFactory.createServer();
-  const viewModel = await presenter.getViewModel(params.id);
+  const viewModel = await presenter.getViewModel(id);
 
   if (!viewModel) {
     notFound();

@@ -2,13 +2,19 @@ import { AccommodationDetailPresenterFactory } from "@/src/presentation/presente
 import { AccommodationDetailView } from "@/src/presentation/components/accommodation-detail/AccommodationDetailView";
 import { notFound } from "next/navigation";
 
-interface AccommodationDetailPageProps {
-  params: Promise<{ id: string }>;
+interface PageProps {
+  params: Promise<{
+    id: string;
+  }>;
 }
 
-export default async function AccommodationDetailPage({
-  params,
-}: AccommodationDetailPageProps) {
+export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
+  const presenter = await AccommodationDetailPresenterFactory.createServer();
+  return presenter.generateMetadata(id);
+}
+
+export default async function AccommodationDetailPage({ params }: PageProps) {
   const { id } = await params;
   const presenter = await AccommodationDetailPresenterFactory.createServer();
   const initialViewModel = await presenter.getViewModel(id);
@@ -19,11 +25,4 @@ export default async function AccommodationDetailPage({
   }
 
   return <AccommodationDetailView initialViewModel={initialViewModel} />;
-}
-
-// Generate metadata
-export async function generateMetadata({ params }: AccommodationDetailPageProps) {
-  const { id } = await params;
-  const presenter = await AccommodationDetailPresenterFactory.createServer();
-  return presenter.generateMetadata(id);
 }

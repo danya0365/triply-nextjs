@@ -1,16 +1,18 @@
 "use client";
 
-import { useAccommodationsPresenter } from "@/src/presentation/presenters/accommodations/useAccommodationsPresenter";
-import type { AccommodationsViewModel } from "@/src/presentation/presenters/accommodations/AccommodationsPresenter";
 import type { Accommodation } from "@/src/data/mock/accommodations.mock";
-import { useState } from "react";
+import type { AccommodationsViewModel } from "@/src/presentation/presenters/accommodations/AccommodationsPresenter";
+import { useAccommodationsPresenter } from "@/src/presentation/presenters/accommodations/useAccommodationsPresenter";
 import Link from "next/link";
+import { useState } from "react";
 
 interface AccommodationsViewProps {
   initialViewModel: AccommodationsViewModel;
 }
 
-export function AccommodationsView({ initialViewModel }: AccommodationsViewProps) {
+export function AccommodationsView({
+  initialViewModel,
+}: AccommodationsViewProps) {
   const {
     viewModel,
     filters,
@@ -41,7 +43,8 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold text-white mb-4">ค้นหาที่พัก</h1>
           <p className="text-white/90 text-lg mb-6">
-            มีที่พักให้เลือกมากกว่า {viewModel.totalCount} แห่งทั่วประเทศไทยและเอเชีย
+            มีที่พักให้เลือกมากกว่า {viewModel.totalCount}{" "}
+            แห่งทั่วประเทศไทยและเอเชีย
           </p>
 
           {/* Search Bar */}
@@ -52,7 +55,7 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ค้นหาที่พัก เช่น โรงแรม รีสอร์ท วิลล่า..."
-                className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white bg-white dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               />
               <button
                 type="submit"
@@ -71,7 +74,9 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
           <aside className="lg:w-64 flex-shrink-0">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-4">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">ตัวกรอง</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  ตัวกรอง
+                </h2>
                 <button
                   onClick={clearFilters}
                   className="text-sm text-sky-600 dark:text-sky-400 hover:underline"
@@ -82,11 +87,15 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
 
               {/* Destination Filter */}
               <div className="mb-6">
-                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">จุดหมาย</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                  จุดหมาย
+                </label>
                 <select
                   value={filters.destinationId || ""}
                   onChange={(e) =>
-                    updateFilters({ destinationId: e.target.value || undefined })
+                    updateFilters({
+                      destinationId: e.target.value || undefined,
+                    })
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-500 focus:border-transparent"
                 >
@@ -139,7 +148,9 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
                     }
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-300 dark:focus:ring-sky-500 focus:border-transparent"
                   />
-                  <span className="flex items-center text-gray-600 dark:text-gray-400">-</span>
+                  <span className="flex items-center text-gray-600 dark:text-gray-400">
+                    -
+                  </span>
                   <input
                     type="number"
                     placeholder="สูงสุด"
@@ -187,7 +198,8 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="text-sm text-gray-600 dark:text-gray-400">
-                  แสดง {((viewModel.currentPage - 1) * viewModel.itemsPerPage) + 1}-
+                  แสดง{" "}
+                  {(viewModel.currentPage - 1) * viewModel.itemsPerPage + 1}-
                   {Math.min(
                     viewModel.currentPage * viewModel.itemsPerPage,
                     viewModel.totalCount
@@ -234,7 +246,9 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
               <div className="flex justify-center items-center py-12">
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 dark:border-sky-400 mx-auto mb-4"></div>
-                  <p className="text-gray-600 dark:text-gray-400">กำลังโหลด...</p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    กำลังโหลด...
+                  </p>
                 </div>
               </div>
             )}
@@ -270,7 +284,9 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
                 {viewModel.accommodations.length === 0 && (
                   <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg">
                     <div className="text-6xl mb-4">🏨</div>
-                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">ไม่พบที่พักที่ตรงกับเงื่อนไข</h3>
+                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+                      ไม่พบที่พักที่ตรงกับเงื่อนไข
+                    </h3>
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
                       ลองปรับเปลี่ยนตัวกรองหรือค้นหาใหม่
                     </p>
@@ -294,7 +310,10 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
                       ← ก่อนหน้า
                     </button>
 
-                    {Array.from({ length: viewModel.totalPages }, (_, i) => i + 1)
+                    {Array.from(
+                      { length: viewModel.totalPages },
+                      (_, i) => i + 1
+                    )
                       .filter(
                         (page) =>
                           page === 1 ||
@@ -304,7 +323,9 @@ export function AccommodationsView({ initialViewModel }: AccommodationsViewProps
                       .map((page, index, array) => (
                         <div key={page} className="flex items-center">
                           {index > 0 && array[index - 1] !== page - 1 && (
-                            <span className="px-2 text-gray-600 dark:text-gray-400">...</span>
+                            <span className="px-2 text-gray-600 dark:text-gray-400">
+                              ...
+                            </span>
                           )}
                           <button
                             onClick={() => goToPage(page)}
@@ -350,8 +371,12 @@ function AccommodationCard({
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all flex">
         <div className="w-64 h-48 bg-gradient-to-br from-sky-200 to-violet-200 dark:from-sky-300/20 dark:to-violet-300/20 flex-shrink-0"></div>
         <div className="p-6 flex-1">
-          <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{accommodation.name}</h3>
-          <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">📍 {accommodation.address}</p>
+          <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+            {accommodation.name}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+            📍 {accommodation.address}
+          </p>
           <div className="flex items-center gap-2 mb-4">
             <span className="px-2 py-1 bg-sky-400 dark:bg-sky-500 text-white text-sm font-bold rounded">
               {accommodation.averageRating.toFixed(1)}
@@ -363,14 +388,21 @@ function AccommodationCard({
           <div className="flex justify-between items-end">
             <div className="flex gap-2">
               {accommodation.amenityIds.slice(0, 3).map((id) => (
-                <span key={id} className="text-sm text-gray-600 dark:text-gray-400">✓</span>
+                <span
+                  key={id}
+                  className="text-sm text-gray-600 dark:text-gray-400"
+                >
+                  ✓
+                </span>
               ))}
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-sky-600 dark:text-sky-400">
                 ฿{accommodation.basePricePerNight.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">/ คืน</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                / คืน
+              </div>
             </div>
           </div>
         </div>
@@ -382,8 +414,12 @@ function AccommodationCard({
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1">
       <div className="relative h-48 bg-gradient-to-br from-sky-200 to-violet-200 dark:from-sky-300/20 dark:to-violet-300/20"></div>
       <div className="p-4">
-        <h3 className="font-bold text-lg mb-2 line-clamp-1 text-gray-900 dark:text-white">{accommodation.name}</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">📍 {accommodation.address.split(",")[0]}</p>
+        <h3 className="font-bold text-lg mb-2 line-clamp-1 text-gray-900 dark:text-white">
+          {accommodation.name}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          📍 {accommodation.address.split(",")[0]}
+        </p>
         <div className="flex items-center gap-2 mb-3">
           <span className="px-2 py-1 bg-sky-400 dark:bg-sky-500 text-white text-xs font-bold rounded">
             {accommodation.averageRating.toFixed(1)}
@@ -400,7 +436,9 @@ function AccommodationCard({
             <div className="text-xl font-bold text-sky-600 dark:text-sky-400">
               ฿{accommodation.basePricePerNight.toLocaleString()}
             </div>
-            <div className="text-xs text-gray-600 dark:text-gray-400">/ คืน</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">
+              / คืน
+            </div>
           </div>
         </div>
       </div>

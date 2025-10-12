@@ -3,19 +3,21 @@ import { DestinationDetailView } from "@/src/presentation/components/destination
 import { notFound } from "next/navigation";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
   const presenter = await DestinationDetailPresenterFactory.createServer();
-  return presenter.generateMetadata(params.slug);
+  return presenter.generateMetadata(slug);
 }
 
 export default async function DestinationDetailPage({ params }: PageProps) {
+  const { slug } = await params;
   const presenter = await DestinationDetailPresenterFactory.createServer();
-  const viewModel = await presenter.getViewModel(params.slug);
+  const viewModel = await presenter.getViewModel(slug);
 
   if (!viewModel) {
     notFound();
