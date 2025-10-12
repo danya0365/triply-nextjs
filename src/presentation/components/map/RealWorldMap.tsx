@@ -5,9 +5,12 @@
 
 "use client";
 
-import { useState, useRef, useMemo } from "react";
 import type { Destination } from "@/src/data/master/destinations.master";
 import { clusterDestinations, type Cluster } from "@/src/utils/map/clustering";
+import { useMemo, useRef, useState } from "react";
+
+const maxZoom = 30;
+const minZoom = 1;
 
 export interface RealWorldMapProps {
   destinations: Destination[];
@@ -20,18 +23,22 @@ export function RealWorldMap({
   height = "600px",
   onDestinationClick,
 }: RealWorldMapProps) {
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(minZoom);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [regionFilter, setRegionFilter] = useState<"all" | "thailand" | "sea">("all");
+  const [regionFilter, setRegionFilter] = useState<"all" | "thailand" | "sea">(
+    "all"
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [showList, setShowList] = useState(false);
   const [enableClustering, setEnableClustering] = useState(true);
   const [showRoutes, setShowRoutes] = useState(false);
-  const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
+    []
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -51,24 +58,24 @@ export function RealWorldMap({
   /**
    * Convert lat/lng to SVG x/y coordinates
    * Using the geoViewBox from world.svg
-   * 
+   *
    * IMPORTANT: Mercator-like projection adjustment
    */
   const latLngToXY = (lat: number, lng: number) => {
     // Normalize longitude to 0-1
     const xNorm = (lng - geoViewBox.west) / (geoViewBox.east - geoViewBox.west);
-    
+
     // Mercator projection for Y (to match how world maps work)
     // Convert to radians
     const latRad = (lat * Math.PI) / 180;
     const mercatorY = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
-    
+
     // Normalize bounds
     const northRad = (geoViewBox.north * Math.PI) / 180;
     const southRad = (geoViewBox.south * Math.PI) / 180;
     const mercatorNorth = Math.log(Math.tan(Math.PI / 4 + northRad / 2));
     const mercatorSouth = Math.log(Math.tan(Math.PI / 4 + southRad / 2));
-    
+
     // Normalize to 0-1 (inverted because SVG y goes down)
     const yNorm = (mercatorNorth - mercatorY) / (mercatorNorth - mercatorSouth);
 
@@ -80,17 +87,17 @@ export function RealWorldMap({
 
   // Handle zoom with center point calculation
   const handleZoomIn = () => {
-    if (zoom >= 5) return;
+    if (zoom >= maxZoom) return;
     zoomToCenter(zoom + 0.5);
   };
 
   const handleZoomOut = () => {
-    if (zoom <= 1) return;
+    if (zoom <= minZoom) return;
     zoomToCenter(zoom - 0.5);
   };
 
   const handleResetZoom = () => {
-    setZoom(1);
+    setZoom(minZoom);
     setOffset({ x: 0, y: 0 });
   };
 
@@ -138,10 +145,10 @@ export function RealWorldMap({
   // Handle wheel zoom at mouse position
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    
+
     const delta = e.deltaY > 0 ? -0.2 : 0.2;
-    const newZoom = Math.max(1, Math.min(zoom + delta, 5));
-    
+    const newZoom = Math.max(minZoom, Math.min(zoom + delta, maxZoom));
+
     if (newZoom === zoom) return;
 
     // Get mouse position relative to container
@@ -181,7 +188,10 @@ export function RealWorldMap({
 
   // Get marker color based on region
   const getMarkerColor = (destination: Destination) => {
-    if (destination.country === "ประเทศไทย" || destination.country === "Thailand") {
+    if (
+      destination.country === "ประเทศไทย" ||
+      destination.country === "Thailand"
+    ) {
       return "#10b981"; // Green for Thailand
     }
     return "#3b82f6"; // Blue for others
@@ -191,7 +201,8 @@ export function RealWorldMap({
   const filteredDestinations = destinations.filter((dest) => {
     // Region filter
     if (regionFilter === "thailand") {
-      if (dest.country !== "ประเทศไทย" && dest.country !== "Thailand") return false;
+      if (dest.country !== "ประเทศไทย" && dest.country !== "Thailand")
+        return false;
     } else if (regionFilter === "sea") {
       if (!dest.region.includes("Southeast Asia")) return false;
     }
@@ -212,8 +223,11 @@ export function RealWorldMap({
 
   // Focus on a specific destination
   const focusOnDestination = (destination: Destination) => {
-    const { x, y } = latLngToXY(destination.coordinates.lat, destination.coordinates.lng);
-    
+    const { x, y } = latLngToXY(
+      destination.coordinates.lat,
+      destination.coordinates.lng
+    );
+
     if (!containerRef.current) return;
 
     const container = containerRef.current;
@@ -248,7 +262,7 @@ export function RealWorldMap({
   // Handle cluster click
   const handleClusterClick = (cluster: Cluster, e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (cluster.count === 1) {
       // Single destination
       const dest = cluster.destinations[0];
@@ -257,7 +271,7 @@ export function RealWorldMap({
     } else {
       // Multiple destinations - zoom in to expand cluster
       const { x, y } = latLngToXY(cluster.center.lat, cluster.center.lng);
-      
+
       if (!containerRef.current) return;
       const container = containerRef.current;
       const centerX = container.clientWidth / 2;
@@ -290,7 +304,7 @@ export function RealWorldMap({
       <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
         <button
           onClick={handleZoomIn}
-          disabled={zoom >= 5}
+          disabled={zoom >= maxZoom}
           className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl disabled:opacity-50 flex items-center justify-center font-bold text-xl transition-all hover:scale-110"
           title="ซูมเข้า"
         >
@@ -413,11 +427,12 @@ export function RealWorldMap({
         {/* Info Badge */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg px-3 py-2">
           <div className="text-sm font-bold text-gray-900 dark:text-white">
-            📍 แสดง {filteredDestinations.length} / {destinations.length} จุดหมาย
+            📍 แสดง {filteredDestinations.length} / {destinations.length}{" "}
+            จุดหมาย
           </div>
           {selectedId && (
             <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-              เลือก: {destinations.find(d => d.id === selectedId)?.name}
+              เลือก: {destinations.find((d) => d.id === selectedId)?.name}
             </div>
           )}
         </div>
@@ -487,8 +502,14 @@ export function RealWorldMap({
 
               if (!dest1 || !dest2) return null;
 
-              const point1 = latLngToXY(dest1.coordinates.lat, dest1.coordinates.lng);
-              const point2 = latLngToXY(dest2.coordinates.lat, dest2.coordinates.lng);
+              const point1 = latLngToXY(
+                dest1.coordinates.lat,
+                dest1.coordinates.lng
+              );
+              const point2 = latLngToXY(
+                dest2.coordinates.lat,
+                dest2.coordinates.lng
+              );
 
               const x1 = point1.x * zoom + offset.x;
               const y1 = point1.y * zoom + offset.y;
@@ -534,21 +555,35 @@ export function RealWorldMap({
         )}
 
         {/* Markers/Clusters Layer (fixed size, separate from map) */}
-        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        >
           {clusters.map((cluster) => {
             const { x, y } = latLngToXY(cluster.center.lat, cluster.center.lng);
-            
+
             // Transform position with zoom and offset
             const markerX = x * zoom + offset.x;
             const markerY = y * zoom + offset.y;
-            
+
             const isSingleDestination = cluster.count === 1;
             const dest = cluster.destinations[0];
             const isSelected = selectedId === dest.id;
             const isHovered = hoveredId === dest.id;
-            const isInRoute = showRoutes && selectedDestinations.includes(dest.id);
-            const size = isSingleDestination ? getMarkerSize(dest.popularityScore) : 10;
-            const color = isSingleDestination ? getMarkerColor(dest) : "#f59e0b";
+            const isInRoute =
+              showRoutes && selectedDestinations.includes(dest.id);
+            const size = isSingleDestination
+              ? getMarkerSize(dest.popularityScore)
+              : 10;
+            const color = isSingleDestination
+              ? getMarkerColor(dest)
+              : "#f59e0b";
 
             return (
               <div
@@ -563,17 +598,25 @@ export function RealWorldMap({
                     handleClusterClick(cluster, e);
                   }
                 }}
-                onMouseEnter={() => isSingleDestination && setHoveredId(dest.id)}
+                onMouseEnter={() =>
+                  isSingleDestination && setHoveredId(dest.id)
+                }
                 onMouseLeave={() => isSingleDestination && setHoveredId(null)}
                 style={{
                   position: "absolute",
                   left: markerX,
                   top: markerY,
                   transform: isSingleDestination
-                    ? `translate(-50%, -100%) scale(${isSelected || isHovered || isInRoute ? 1.3 : 1})`
+                    ? `translate(-50%, -100%) scale(${
+                        isSelected || isHovered || isInRoute ? 1.3 : 1
+                      })`
                     : `translate(-50%, -50%) scale(${isHovered ? 1.2 : 1})`,
-                  transformOrigin: isSingleDestination ? "center bottom" : "center",
-                  transition: isDragging ? "none" : "transform 0.2s ease-in-out",
+                  transformOrigin: isSingleDestination
+                    ? "center bottom"
+                    : "center",
+                  transition: isDragging
+                    ? "none"
+                    : "transform 0.2s ease-in-out",
                   cursor: "pointer",
                   zIndex: isSelected ? 100 : isHovered ? 50 : 10,
                   pointerEvents: "auto",
@@ -591,7 +634,7 @@ export function RealWorldMap({
                       fill="rgba(0,0,0,0.3)"
                       opacity="0.5"
                     />
-                    
+
                     {/* Pin */}
                     <path
                       d="M12 0C7.6 0 4 3.6 4 8c0 5.4 8 16 8 16s8-10.6 8-16c0-4.4-3.6-8-8-8z"
@@ -599,14 +642,9 @@ export function RealWorldMap({
                       stroke="white"
                       strokeWidth="2"
                     />
-                    
+
                     {/* Center dot */}
-                    <circle
-                      cx="12"
-                      cy="8"
-                      r="3"
-                      fill="white"
-                    />
+                    <circle cx="12" cy="8" r="3" fill="white" />
 
                     {/* Pulse animation for selected/route */}
                     {(isSelected || isInRoute) && (
@@ -644,7 +682,7 @@ export function RealWorldMap({
                       opacity="0.2"
                       className="animate-pulse"
                     />
-                    
+
                     {/* Main circle */}
                     <circle
                       cx="30"
@@ -654,7 +692,7 @@ export function RealWorldMap({
                       stroke="white"
                       strokeWidth="3"
                     />
-                    
+
                     {/* Count */}
                     <text
                       x="30"
@@ -672,21 +710,23 @@ export function RealWorldMap({
                 )}
 
                 {/* Label on hover */}
-                {isSingleDestination && (isHovered || isSelected) && !isDragging && (
-                  <div
-                    className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
-                    style={{ pointerEvents: "none" }}
-                  >
-                    <div className="bg-white dark:bg-gray-800 px-3 py-2 rounded-lg shadow-2xl border-2 border-sky-300 dark:border-sky-700">
-                      <div className="text-sm font-bold text-gray-900 dark:text-white">
-                        {dest.name}
-                      </div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
-                        {dest.country} · ⭐ {dest.popularityScore}
+                {isSingleDestination &&
+                  (isHovered || isSelected) &&
+                  !isDragging && (
+                    <div
+                      className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <div className="bg-white dark:bg-gray-800 px-3 py-2 rounded-lg shadow-2xl border-2 border-sky-300 dark:border-sky-700">
+                        <div className="text-sm font-bold text-gray-900 dark:text-white">
+                          {dest.name}
+                        </div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                          {dest.country} · ⭐ {dest.popularityScore}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             );
           })}
@@ -736,7 +776,9 @@ export function RealWorldMap({
                     }`}
                   >
                     <div className="flex items-start gap-2">
-                      <div className="text-2xl">{getMarkerColor(dest) === "#10b981" ? "🟢" : "🔵"}</div>
+                      <div className="text-2xl">
+                        {getMarkerColor(dest) === "#10b981" ? "🟢" : "🔵"}
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-gray-900 dark:text-white truncate">
                           {dest.name}
@@ -765,12 +807,14 @@ export function RealWorldMap({
       {/* Instructions */}
       <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
         <p>
-          <strong>🖱️ ลากเพื่อเลื่อน</strong> | <strong>🔍 Scroll เพื่อซูม</strong> | 
-          <strong> 👆 คลิกจุดหมายเพื่อดูรายละเอียด</strong> | 
+          <strong>🖱️ ลากเพื่อเลื่อน</strong> |{" "}
+          <strong>🔍 Scroll เพื่อซูม</strong> |
+          <strong> 👆 คลิกจุดหมายเพื่อดูรายละเอียด</strong> |
           <strong> 📋 คลิกรายการเพื่อโฟกัส</strong>
         </p>
         <p className="text-xs mt-1 text-gray-500">
-          แผนที่ SVG จริง + พิกัด Lat/Lng จาก Master Data · กรองตามภูมิภาค · ค้นหาจุดหมาย
+          แผนที่ SVG จริง + พิกัด Lat/Lng จาก Master Data · กรองตามภูมิภาค ·
+          ค้นหาจุดหมาย
         </p>
       </div>
     </div>
