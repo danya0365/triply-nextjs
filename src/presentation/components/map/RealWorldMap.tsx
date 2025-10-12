@@ -5,8 +5,9 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import type { Destination } from "@/src/data/master/destinations.master";
+import { clusterDestinations, type Cluster } from "@/src/utils/map/clustering";
 
 export interface RealWorldMapProps {
   destinations: Destination[];
@@ -28,6 +29,9 @@ export function RealWorldMap({
   const [regionFilter, setRegionFilter] = useState<"all" | "thailand" | "sea">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showList, setShowList] = useState(false);
+  const [enableClustering, setEnableClustering] = useState(true);
+  const [showRoutes, setShowRoutes] = useState(false);
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -228,6 +232,58 @@ export function RealWorldMap({
     setSelectedId(destination.id);
   };
 
+  // Cluster destinations based on zoom level
+  const clusters = useMemo(() => {
+    if (!enableClustering) {
+      return filteredDestinations.map((dest) => ({
+        id: `cluster-${dest.id}`,
+        center: dest.coordinates,
+        destinations: [dest],
+        count: 1,
+      }));
+    }
+    return clusterDestinations(filteredDestinations, zoom);
+  }, [filteredDestinations, zoom, enableClustering]);
+
+  // Handle cluster click
+  const handleClusterClick = (cluster: Cluster, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (cluster.count === 1) {
+      // Single destination
+      const dest = cluster.destinations[0];
+      setSelectedId(dest.id);
+      onDestinationClick?.(dest);
+    } else {
+      // Multiple destinations - zoom in to expand cluster
+      const { x, y } = latLngToXY(cluster.center.lat, cluster.center.lng);
+      
+      if (!containerRef.current) return;
+      const container = containerRef.current;
+      const centerX = container.clientWidth / 2;
+      const centerY = container.clientHeight / 2;
+
+      const newZoom = Math.min(zoom + 1, 5);
+      const newOffset = {
+        x: centerX - x * newZoom,
+        y: centerY - y * newZoom,
+      };
+
+      setZoom(newZoom);
+      setOffset(newOffset);
+    }
+  };
+
+  // Toggle destination for route
+  const toggleDestinationForRoute = (destId: string) => {
+    setSelectedDestinations((prev) => {
+      if (prev.includes(destId)) {
+        return prev.filter((id) => id !== destId);
+      }
+      return [...prev, destId].slice(-5); // Max 5 destinations
+    });
+  };
+
   return (
     <div className="relative" style={{ height }}>
       {/* Controls */}
@@ -266,6 +322,45 @@ export function RealWorldMap({
         >
           📋
         </button>
+      </div>
+
+      {/* Feature Toggles (Bottom Right) */}
+      <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-2">
+        <button
+          onClick={() => setEnableClustering(!enableClustering)}
+          className={`px-4 py-2 rounded-lg shadow-lg transition-all text-sm font-medium ${
+            enableClustering
+              ? "bg-sky-500 text-white"
+              : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+          }`}
+          title="เปิด/ปิด Clustering"
+        >
+          {enableClustering ? "🔵" : "⚪"} Cluster
+        </button>
+        <button
+          onClick={() => setShowRoutes(!showRoutes)}
+          className={`px-4 py-2 rounded-lg shadow-lg transition-all text-sm font-medium ${
+            showRoutes
+              ? "bg-purple-500 text-white"
+              : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+          }`}
+          title="เปิด/ปิด เส้นทาง"
+        >
+          {showRoutes ? "🟣" : "⚪"} เส้นทาง
+        </button>
+        {showRoutes && selectedDestinations.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg px-3 py-2 text-xs">
+            <div className="font-bold text-gray-900 dark:text-white mb-1">
+              เลือกแล้ว {selectedDestinations.length}/5
+            </div>
+            <button
+              onClick={() => setSelectedDestinations([])}
+              className="text-red-500 hover:text-red-700 text-xs"
+            >
+              ล้างทั้งหมด
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Top Bar - Region Filter & Search */}
@@ -371,39 +466,121 @@ export function RealWorldMap({
           </svg>
         </div>
 
-        {/* Markers Layer (fixed size, separate from map) */}
+        {/* Routes Layer */}
+        {showRoutes && selectedDestinations.length > 1 && (
+          <svg
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+              zIndex: 5,
+            }}
+          >
+            {selectedDestinations.slice(0, -1).map((destId, index) => {
+              const dest1 = destinations.find((d) => d.id === destId);
+              const dest2 = destinations.find(
+                (d) => d.id === selectedDestinations[index + 1]
+              );
+
+              if (!dest1 || !dest2) return null;
+
+              const point1 = latLngToXY(dest1.coordinates.lat, dest1.coordinates.lng);
+              const point2 = latLngToXY(dest2.coordinates.lat, dest2.coordinates.lng);
+
+              const x1 = point1.x * zoom + offset.x;
+              const y1 = point1.y * zoom + offset.y;
+              const x2 = point2.x * zoom + offset.x;
+              const y2 = point2.y * zoom + offset.y;
+
+              return (
+                <g key={`route-${index}`}>
+                  {/* Shadow */}
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="rgba(0,0,0,0.2)"
+                    strokeWidth="6"
+                    strokeDasharray="5,5"
+                  />
+                  {/* Main line */}
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="#a855f7"
+                    strokeWidth="3"
+                    strokeDasharray="5,5"
+                  >
+                    <animate
+                      attributeName="stroke-dashoffset"
+                      from="10"
+                      to="0"
+                      dur="1s"
+                      repeatCount="indefinite"
+                    />
+                  </line>
+                  {/* Arrow */}
+                  <circle cx={x2} cy={y2} r="4" fill="#a855f7" />
+                </g>
+              );
+            })}
+          </svg>
+        )}
+
+        {/* Markers/Clusters Layer (fixed size, separate from map) */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
-          {filteredDestinations.map((dest) => {
-            const { x, y } = latLngToXY(dest.coordinates.lat, dest.coordinates.lng);
+          {clusters.map((cluster) => {
+            const { x, y } = latLngToXY(cluster.center.lat, cluster.center.lng);
             
-            // Transform marker position with zoom and offset
+            // Transform position with zoom and offset
             const markerX = x * zoom + offset.x;
             const markerY = y * zoom + offset.y;
             
+            const isSingleDestination = cluster.count === 1;
+            const dest = cluster.destinations[0];
             const isSelected = selectedId === dest.id;
             const isHovered = hoveredId === dest.id;
-            const size = getMarkerSize(dest.popularityScore);
-            const color = getMarkerColor(dest);
+            const isInRoute = showRoutes && selectedDestinations.includes(dest.id);
+            const size = isSingleDestination ? getMarkerSize(dest.popularityScore) : 10;
+            const color = isSingleDestination ? getMarkerColor(dest) : "#f59e0b";
 
             return (
               <div
-                key={dest.id}
-                onClick={(e) => handleMarkerClick(dest, e)}
-                onMouseEnter={() => setHoveredId(dest.id)}
-                onMouseLeave={() => setHoveredId(null)}
+                key={cluster.id}
+                onClick={(e) => {
+                  if (showRoutes && isSingleDestination) {
+                    e.stopPropagation();
+                    toggleDestinationForRoute(dest.id);
+                  } else if (isSingleDestination) {
+                    handleMarkerClick(dest, e);
+                  } else {
+                    handleClusterClick(cluster, e);
+                  }
+                }}
+                onMouseEnter={() => isSingleDestination && setHoveredId(dest.id)}
+                onMouseLeave={() => isSingleDestination && setHoveredId(null)}
                 style={{
                   position: "absolute",
                   left: markerX,
                   top: markerY,
-                  transform: `translate(-50%, -100%) scale(${isSelected || isHovered ? 1.3 : 1})`,
-                  transformOrigin: "center bottom",
+                  transform: isSingleDestination
+                    ? `translate(-50%, -100%) scale(${isSelected || isHovered || isInRoute ? 1.3 : 1})`
+                    : `translate(-50%, -50%) scale(${isHovered ? 1.2 : 1})`,
+                  transformOrigin: isSingleDestination ? "center bottom" : "center",
                   transition: isDragging ? "none" : "transform 0.2s ease-in-out",
                   cursor: "pointer",
                   zIndex: isSelected ? 100 : isHovered ? 50 : 10,
                   pointerEvents: "auto",
                 }}
               >
-                  {/* Pin Icon */}
+                {isSingleDestination ? (
+                  /* Single Pin Icon */
                   <svg width={size * 4} height={size * 5} viewBox="0 0 24 32">
                     {/* Shadow */}
                     <ellipse
@@ -431,21 +608,71 @@ export function RealWorldMap({
                       fill="white"
                     />
 
-                    {/* Pulse animation for selected */}
-                    {isSelected && (
+                    {/* Pulse animation for selected/route */}
+                    {(isSelected || isInRoute) && (
                       <circle
                         cx="12"
                         cy="8"
                         r="6"
-                        fill={color}
+                        fill={isInRoute ? "#a855f7" : color}
                         opacity="0.4"
                         className="animate-ping"
                       />
                     )}
+
+                    {/* Route indicator */}
+                    {isInRoute && (
+                      <circle
+                        cx="12"
+                        cy="8"
+                        r="4"
+                        fill="none"
+                        stroke="#a855f7"
+                        strokeWidth="2"
+                      />
+                    )}
                   </svg>
+                ) : (
+                  /* Cluster Marker */
+                  <svg width="60" height="60" viewBox="0 0 60 60">
+                    {/* Outer ring */}
+                    <circle
+                      cx="30"
+                      cy="30"
+                      r="28"
+                      fill={color}
+                      opacity="0.2"
+                      className="animate-pulse"
+                    />
+                    
+                    {/* Main circle */}
+                    <circle
+                      cx="30"
+                      cy="30"
+                      r="20"
+                      fill={color}
+                      stroke="white"
+                      strokeWidth="3"
+                    />
+                    
+                    {/* Count */}
+                    <text
+                      x="30"
+                      y="30"
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fontSize="14"
+                      fontWeight="bold"
+                      fill="white"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      {cluster.count}
+                    </text>
+                  </svg>
+                )}
 
                 {/* Label on hover */}
-                {(isHovered || isSelected) && !isDragging && (
+                {isSingleDestination && (isHovered || isSelected) && !isDragging && (
                   <div
                     className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
                     style={{ pointerEvents: "none" }}
