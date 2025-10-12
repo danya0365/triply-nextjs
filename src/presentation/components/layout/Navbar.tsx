@@ -105,6 +105,12 @@ export function Navbar() {
                         📋 การจองของฉัน
                       </Link>
                       <Link
+                        href="/calendar"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        📅 ปฏิทิน
+                      </Link>
+                      <Link
                         href="/trips"
                         className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
@@ -198,8 +204,23 @@ export function Navbar() {
                 <Link
                   href="/profile"
                   className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   👤 โปรไฟล์
+                </Link>
+                <Link
+                  href="/bookings"
+                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  📋 การจองของฉัน
+                </Link>
+                <Link
+                  href="/calendar"
+                  className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  📅 ปฏิทิน
                 </Link>
                 <button
                   onClick={handleLogout}
