@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Accommodation } from "../../presenters/landing/LandingPresenter";
 
 interface TrendingAccommodationsProps {
@@ -85,9 +86,12 @@ export function TrendingAccommodations({ accommodations }: TrendingAccommodation
                         / คืน
                       </span>
                     </div>
-                    <button className="px-6 py-2 bg-gradient-to-r from-sky-300 to-violet-300 text-white font-semibold rounded-lg hover:shadow-lg transition-all">
+                    <Link
+                      href={`/accommodations/${accommodation.id}`}
+                      className="px-6 py-2 bg-gradient-to-r from-sky-300 to-violet-300 text-white font-semibold rounded-lg hover:shadow-lg transition-all inline-block"
+                    >
                       ดูรายละเอียด
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -97,9 +101,12 @@ export function TrendingAccommodations({ accommodations }: TrendingAccommodation
 
         {/* View All Button */}
         <div className="text-center mt-8">
-          <button className="px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <Link
+            href="/accommodations"
+            className="inline-block px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             ดูที่พักทั้งหมด
-          </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Destination } from "../../presenters/landing/LandingPresenter";
 
 interface FeaturedDestinationsProps {
@@ -27,8 +28,9 @@ export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps
         {/* Destinations Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {destinations.map((destination) => (
-            <div
+            <Link
               key={destination.id}
+              href={`/destinations/${destination.slug}`}
               className="group cursor-pointer rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
             >
               {/* Image */}
@@ -70,7 +72,7 @@ export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps
                   ))}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -334,13 +334,21 @@ function TripCard({
         </div>
 
         {/* Actions */}
-        <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+        <div className="pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
           <Link
-            href={`/trip-planner?tripId=${trip.id}`}
+            href={`/trips/${trip.id}`}
             className="block text-center px-4 py-2 bg-gradient-to-r from-sky-400 to-violet-400 text-white font-medium rounded-lg hover:shadow-lg transition-all"
           >
             ดูรายละเอียด →
           </Link>
+          {trip.planningStage !== "completed" && (
+            <Link
+              href={`/trip-planner?tripId=${trip.id}`}
+              className="block text-center px-4 py-2 border-2 border-sky-400 text-sky-600 dark:text-sky-400 font-medium rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-all"
+            >
+              แก้ไข
+            </Link>
+          )}
         </div>
       </div>
     </div>

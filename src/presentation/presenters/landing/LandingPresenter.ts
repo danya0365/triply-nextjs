@@ -11,6 +11,7 @@ import { USERS } from "@/src/data/mock/users.mock";
 export interface Destination {
   id: string;
   name: string;
+  slug: string;
   country: string;
   propertiesCount: number;
   startingPrice: number;
@@ -63,6 +64,7 @@ export class LandingPresenter {
       return {
         id: dest.id,
         name: dest.name,
+        slug: dest.slug,
         country: dest.country,
         propertiesCount: destAccommodations.length,
         startingPrice: minPrice,
