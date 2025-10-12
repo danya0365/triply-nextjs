@@ -1,18 +1,17 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import type { DestinationsViewModel } from "@/src/presentation/presenters/destinations/DestinationsPresenter";
 import type { Destination } from "@/src/data/master/destinations.master";
-import { TrendingDestinationsSection } from "./TrendingDestinationsSection";
-import { BudgetDestinationFinder } from "./BudgetDestinationFinder";
-import { SeasonalGuide } from "./SeasonalGuide";
-import { TripInspirationQuiz } from "../quiz/TripInspirationQuiz";
+import type { DestinationsViewModel } from "@/src/presentation/presenters/destinations/DestinationsPresenter";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { QuizHistory } from "../quiz/QuizHistory";
-import { DestinationGallery } from "./DestinationGallery";
+import { TripInspirationQuiz } from "../quiz/TripInspirationQuiz";
+import { BudgetDestinationFinder } from "./BudgetDestinationFinder";
 import { DestinationCollections } from "./DestinationCollections";
-import { DestinationMap } from "./DestinationMap";
+import { DestinationGallery } from "./DestinationGallery";
+import { SeasonalGuide } from "./SeasonalGuide";
+import { TrendingDestinationsSection } from "./TrendingDestinationsSection";
 
 interface DestinationsViewProps {
   initialViewModel: DestinationsViewModel;
@@ -103,9 +102,6 @@ export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
 
         {/* NEW: Destination Gallery */}
         <DestinationGallery destinations={viewModel.destinations} />
-
-        {/* NEW: Interactive Map */}
-        <DestinationMap destinations={viewModel.destinations} />
 
         {/* Divider */}
         <div className="my-12 border-t-2 border-gray-200 dark:border-gray-700"></div>
@@ -274,7 +270,9 @@ function DestinationCard({ destination }: { destination: Destination }) {
 
         {/* Budget */}
         <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
-          <span className="text-xs text-gray-500 dark:text-gray-400">งบประมาณ</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            งบประมาณ
+          </span>
           <span className="font-bold text-gray-900 dark:text-white">
             ฿{destination.averageBudget.min.toLocaleString()} - ฿
             {destination.averageBudget.max.toLocaleString()}
