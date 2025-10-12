@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { DestinationsViewModel } from "@/src/presentation/presenters/destinations/DestinationsPresenter";
 import type { Destination } from "@/src/data/master/destinations.master";
@@ -11,6 +12,24 @@ import { TripInspirationQuiz } from "../quiz/TripInspirationQuiz";
 
 interface DestinationsViewProps {
   initialViewModel: DestinationsViewModel;
+}
+
+// Component that uses useSearchParams - must be wrapped in Suspense
+function QuizScrollHandler() {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const quizParam = searchParams.get("quiz");
+    if (quizParam === "true") {
+      // Scroll to quiz section
+      setTimeout(() => {
+        const quizElement = document.getElementById("quiz-section");
+        quizElement?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [searchParams]);
+
+  return null;
 }
 
 export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
@@ -42,6 +61,11 @@ export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      {/* Quiz scroll handler with Suspense */}
+      <Suspense fallback={null}>
+        <QuizScrollHandler />
+      </Suspense>
+
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -54,7 +78,9 @@ export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
         </div>
 
         {/* NEW: Trip Inspiration Quiz - MAIN FEATURE! */}
-        <TripInspirationQuiz destinations={viewModel.destinations} />
+        <div id="quiz-section">
+          <TripInspirationQuiz destinations={viewModel.destinations} />
+        </div>
 
         {/* NEW: Trending Destinations */}
         <TrendingDestinationsSection destinations={viewModel.destinations} />
