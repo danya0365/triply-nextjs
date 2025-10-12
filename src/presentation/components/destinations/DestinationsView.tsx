@@ -9,6 +9,7 @@ import { TrendingDestinationsSection } from "./TrendingDestinationsSection";
 import { BudgetDestinationFinder } from "./BudgetDestinationFinder";
 import { SeasonalGuide } from "./SeasonalGuide";
 import { TripInspirationQuiz } from "../quiz/TripInspirationQuiz";
+import { QuizHistory } from "../quiz/QuizHistory";
 
 interface DestinationsViewProps {
   initialViewModel: DestinationsViewModel;
@@ -65,6 +66,9 @@ export function DestinationsView({ initialViewModel }: DestinationsViewProps) {
       <Suspense fallback={null}>
         <QuizScrollHandler />
       </Suspense>
+
+      {/* Quiz History Floating Button */}
+      <QuizHistory />
 
       <div className="container mx-auto px-4">
         {/* Header */}
