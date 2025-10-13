@@ -11,7 +11,9 @@ interface FeaturedDestinationsProps {
  * Featured Destinations Component
  * Displays popular travel destinations
  */
-export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps) {
+export function FeaturedDestinations({
+  destinations,
+}: FeaturedDestinationsProps) {
   return (
     <section className="py-16 px-4">
       <div className="container mx-auto">
@@ -35,7 +37,7 @@ export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps
             >
               {/* Image */}
               <div className="relative h-64 bg-gradient-to-br from-sky-200 to-violet-200 overflow-hidden">
-                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                <div className="absolute inset-0 group-hover:bg-black/20 transition-colors" />
                 <div className="absolute inset-0 flex items-center justify-center text-white text-6xl">
                   📍
                 </div>
