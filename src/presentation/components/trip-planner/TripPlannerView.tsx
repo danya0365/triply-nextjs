@@ -42,7 +42,9 @@ export function TripPlannerView({ initialViewModel }: TripPlannerViewProps) {
 
   // Filter by theme
   if (filters.themeId) {
-    displayTrips = displayTrips.filter((trip) => trip.themeId === filters.themeId);
+    displayTrips = displayTrips.filter(
+      (trip) => trip.themeId === filters.themeId
+    );
   }
 
   // Filter by destination
@@ -65,18 +67,25 @@ export function TripPlannerView({ initialViewModel }: TripPlannerViewProps) {
   // Sort trips
   switch (filters.sortBy) {
     case "popular":
-      displayTrips = [...displayTrips].sort((a, b) => b.viewCount - a.viewCount);
+      displayTrips = [...displayTrips].sort(
+        (a, b) => b.viewCount - a.viewCount
+      );
       break;
     case "budget-asc":
-      displayTrips = [...displayTrips].sort((a, b) => a.totalBudget - b.totalBudget);
+      displayTrips = [...displayTrips].sort(
+        (a, b) => a.totalBudget - b.totalBudget
+      );
       break;
     case "budget-desc":
-      displayTrips = [...displayTrips].sort((a, b) => b.totalBudget - a.totalBudget);
+      displayTrips = [...displayTrips].sort(
+        (a, b) => b.totalBudget - a.totalBudget
+      );
       break;
     case "recent":
     default:
       displayTrips = [...displayTrips].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       break;
   }
@@ -96,7 +105,8 @@ export function TripPlannerView({ initialViewModel }: TripPlannerViewProps) {
 
           <div className="relative z-10 container mx-auto px-4 text-center">
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
-              วางแผนทริป<br />
+              วางแผนทริป
+              <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-orange-300">
                 สร้างประสบการณ์การเดินทางที่สมบูรณ์แบบ
               </span>
@@ -106,11 +116,23 @@ export function TripPlannerView({ initialViewModel }: TripPlannerViewProps) {
             </p>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearchSubmit} className="max-w-2xl w-full mx-auto">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="max-w-2xl w-full mx-auto"
+            >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                  <svg className="w-5 h-5 text-white/70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                  <svg
+                    className="w-5 h-5 text-white/70"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <input
@@ -122,22 +144,51 @@ export function TripPlannerView({ initialViewModel }: TripPlannerViewProps) {
                 />
                 <button
                   type="submit"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 px-5 py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-medium rounded-lg flex items-center gap-2 transition-all duration-200 border border-white/20 hover:border-white/30"
+                  className="absolute right-2.5 top-1.5 px-5 py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-medium rounded-lg flex items-center gap-2 transition-all duration-200 border border-white/20 hover:border-white/30"
                 >
                   <span>ค้นหา</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
                   </svg>
                 </button>
-                
+
                 {/* Popular searches */}
                 <div className="flex flex-wrap justify-center gap-2 mt-3 text-sm text-white/80">
                   <span>ยอดนิยม:</span>
-                  <button type="button" onClick={() => setSearchQuery('ทะเล')} className="hover:text-white transition-colors">ทะเล</button>
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("ทะเล")}
+                    className="hover:text-white transition-colors"
+                  >
+                    ทะเล
+                  </button>
                   <span>•</span>
-                  <button type="button" onClick={() => setSearchQuery('ภูเขา')} className="hover:text-white transition-colors">ภูเขา</button>
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("ภูเขา")}
+                    className="hover:text-white transition-colors"
+                  >
+                    ภูเขา
+                  </button>
                   <span>•</span>
-                  <button type="button" onClick={() => setSearchQuery('ธรรมชาติ')} className="hover:text-white transition-colors">ธรรมชาติ</button>
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("ธรรมชาติ")}
+                    className="hover:text-white transition-colors"
+                  >
+                    ธรรมชาติ
+                  </button>
                 </div>
               </div>
             </form>

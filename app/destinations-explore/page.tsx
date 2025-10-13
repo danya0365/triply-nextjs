@@ -1,5 +1,7 @@
 import { DestinationExploreView } from "@/src/presentation/components/destinations/DestinationExploreView";
+import { ExploreDestinationsSkeleton } from "@/src/presentation/components/destinations/ExploreDestinationsSkeleton";
 import { DestinationsPresenterFactory } from "@/src/presentation/presenters/destinations/DestinationsPresenter";
+import { Suspense } from "react";
 
 export async function generateMetadata() {
   return {
@@ -12,5 +14,9 @@ export default async function DestinationsExplorePage() {
   const presenter = await DestinationsPresenterFactory.createServer();
   const initialViewModel = await presenter.getViewModel();
 
-  return <DestinationExploreView initialViewModel={initialViewModel} />;
+  return (
+    <Suspense fallback={<ExploreDestinationsSkeleton />}>
+      <DestinationExploreView initialViewModel={initialViewModel} />
+    </Suspense>
+  );
 }
