@@ -32,8 +32,16 @@ export function UserDashboardView({ initialViewModel }: UserDashboardViewProps) 
       )}
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-sky-300 to-violet-300 dark:from-sky-400 dark:to-violet-400 py-12">
-        <div className="container mx-auto px-4">
+      <div className="relative py-20">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-500 via-blue-400 to-indigo-500 dark:from-teal-600 dark:via-blue-500 dark:to-indigo-600">
+          <div className="absolute inset-0 bg-black/30 dark:bg-black/40" />
+          {/* Animated blobs */}
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-300/30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-300/30 rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4">
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center text-4xl font-bold text-sky-600 dark:text-sky-400 shadow-lg">
               {viewModel.user.displayName[0]}
