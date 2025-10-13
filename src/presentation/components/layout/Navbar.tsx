@@ -2,8 +2,8 @@
 
 import { useAuthStore } from "@/src/store/authStore";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "../common/ThemeToggle";
 
 /**
@@ -11,7 +11,13 @@ import { ThemeToggle } from "../common/ThemeToggle";
  */
 export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuthStore();
+
+  // Check if a nav link is active
+  const isActive = (href: string) => {
+    return pathname === href || (href !== "/" && pathname.startsWith(href));
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -19,19 +25,22 @@ export function Navbar() {
   // Close user menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
         setIsUserMenuOpen(false);
       }
     }
 
     // Add event listener when menu is open
     if (isUserMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
-    
+
     // Clean up
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isUserMenuOpen]);
 
@@ -75,7 +84,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
-                  link.featured
+                  isActive(link.href)
                     ? "bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold hover:shadow-lg hover:scale-105"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 }`}
