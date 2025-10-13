@@ -13,14 +13,38 @@ export function DestinationDetailView({ viewModel }: DestinationDetailViewProps)
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
-      <div className="relative h-96 bg-gradient-to-br from-sky-300 to-violet-300">
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex items-center justify-center text-white">
-          <div className="text-center">
-            <div className="text-8xl mb-4">📍</div>
-            <h1 className="text-5xl font-bold mb-2">{destination.name}</h1>
-            <p className="text-2xl">{destination.nameEn}</p>
-            <p className="text-xl mt-2 opacity-90">{destination.country}</p>
+      <div className="relative py-32">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-400 to-rose-400 dark:from-purple-600 dark:via-pink-500 dark:to-rose-500">
+          <div className="absolute inset-0 bg-black/30 dark:bg-black/40" />
+          {/* Animated blobs */}
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-300/30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 px-6 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full mb-6">
+            <span className="text-xl">📍</span>
+            <span className="font-medium">{destination.country}</span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+            {destination.name}
+            <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-orange-200">
+              {destination.nameEn}
+            </span>
+          </h1>
+          
+          <div className="flex flex-wrap justify-center gap-4 mt-8">
+            {destination.tags?.map((tag, index) => (
+              <span 
+                key={index}
+                className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-full text-sm font-medium border border-white/20 hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                #{tag}
+              </span>
+            ))}
           </div>
         </div>
       </div>
