@@ -1,14 +1,13 @@
 "use client";
-
-import Link from "next/link";
 import type { Destination } from "@/src/data/master/destinations.master";
+import Image from "next/image";
+import Link from "next/link";
 
 interface TrendingDestinationsSectionProps {
   destinations: Destination[];
   title?: string;
   showAll?: boolean;
 }
-
 export function TrendingDestinationsSection({
   destinations,
   title = "🔥 จุดหมายยอดนิยมสัปดาห์นี้",
@@ -27,7 +26,7 @@ export function TrendingDestinationsSection({
         </h2>
         {!showAll && (
           <Link
-            href="/destinations?filter=trending"
+            href="/destinations-explore?filter=trending"
             className="text-sky-600 dark:text-sky-400 hover:underline font-medium"
           >
             ดูทั้งหมด →
@@ -91,11 +90,30 @@ function DestinationTrendCard({
       <div className="relative h-48 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-[1]"></div>
         {destination.coverImage ? (
-          <img
-            src={destination.coverImage}
-            alt={destination.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-          />
+          <>
+            <Image
+              src={destination.coverImage}
+              alt={destination.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
+              onError={(e) => {
+                // Fallback to emoji if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+                const fallback = document.createElement("div");
+                fallback.className =
+                  "w-full h-full bg-gradient-to-br from-sky-400 to-violet-400 flex items-center justify-center text-white text-4xl";
+                fallback.innerHTML = getDestinationEmoji(destination.tags[0]);
+                target.parentNode?.insertBefore(fallback, target.nextSibling);
+              }}
+              priority={false}
+            />
+            {/* Fallback for SSR/SSG */}
+            <div className="w-full h-full bg-gradient-to-br from-sky-400 to-violet-400 flex items-center justify-center text-white text-4xl hidden">
+              {getDestinationEmoji(destination.tags[0])}
+            </div>
+          </>
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-sky-400 to-violet-400 flex items-center justify-center text-white text-4xl">
             {getDestinationEmoji(destination.tags[0])}
@@ -130,7 +148,8 @@ function DestinationTrendCard({
           <span>💰</span>
           <span>
             {destination.averageBudget.min.toLocaleString()}-
-            {destination.averageBudget.max.toLocaleString()} {destination.averageBudget.currency}
+            {destination.averageBudget.max.toLocaleString()}{" "}
+            {destination.averageBudget.currency}
           </span>
         </div>
 
