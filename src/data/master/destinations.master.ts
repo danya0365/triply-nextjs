@@ -348,6 +348,41 @@ export const DESTINATIONS: Destination[] = [
     bestFor: ["nature", "adventure", "culture", "photography", "budget"],
   },
 
+  {
+    id: "dest-011",
+    name: "ปัตตานี",
+    nameEn: "Pattani",
+    slug: "pattani",
+    country: "ประเทศไทย",
+    region: "Southeast Asia",
+    description: "เมืองชายฝั่งทะเลอันดามัน มีชายหาดสวยงาม มัสยิดกลางเมืองที่งดงาม วัฒนธรรมมลายูที่เข้มข้น และอาหารทะเลสดใหม่",
+    highlights: [
+      "มัสยิดกลางเมืองปัตตานี",
+      "หาดตะโละกาโปร์",
+      "หาดปานารี",
+      "ตลาดเก่าเมืองปัตตานี",
+      "พิพิธภัณฑ์เมืองปัตตานี",
+    ],
+    coverImage: "/images/destinations/pattani/cover.jpg",
+    images: [
+      "/images/destinations/pattani/mosque.jpg",
+      "/images/destinations/pattani/beach.jpg",
+      "/images/destinations/pattani/market.jpg",
+    ],
+    coordinates: { lat: 6.8681, lng: 101.2503 },
+    popularityScore: 70,
+    seasonality: {
+      best: ["December", "January", "February", "March"],
+      avoid: ["September", "October", "November"],
+    },
+    averageBudget: { min: 900, max: 3200, currency: "THB" },
+    tags: ["beach", "culture", "mosque", "seafood", "heritage"],
+    climate: "tropical",
+    timezone: "Asia/Bangkok",
+    language: ["Thai", "Malay"],
+    bestFor: ["beach", "culture", "food-tour", "heritage", "photography"],
+  },
+
   // ===== International Destinations (30 destinations) =====
   
   {
