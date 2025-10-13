@@ -152,10 +152,76 @@ export const TRIPS: Trip[] = [
     createdAt: "2025-10-01T09:00:00Z",
     updatedAt: "2025-10-09T10:15:00Z",
   },
+  {
+    id: "trip-004",
+    slug: "hatyai-food-shopping-weekend",
+    creatorId: USERS[1].id,
+    name: "หาดใหญ่ ทริปกินช้อป 3 วัน 2 คืน",
+    description: "ทริปสุดคุ้มหาดใหญ่ ช้อปตลาดกิมหยง ชิมติ่มซำ ไก่ทอดหาดใหญ่ ตลาดสันติชล และของฝากมากมาย",
+    coverImage: "/images/trips/hatyai-food/cover.jpg",
+    startDate: "2025-12-15",
+    endDate: "2025-12-18",
+    durationDays: 3,
+    destinationIds: [DESTINATIONS[7].id], // Hat Yai
+    themeId: TRIP_THEMES[3].id, // Food Tour
+    numAdults: 2,
+    numChildren: 0,
+    totalBudget: 8500,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 2400,
+      activities: 1000,
+      food: 3000,
+      transport: 1000,
+      shopping: 800,
+      misc: 300,
+    },
+    planningStage: "ready",
+    completionPercentage: 90,
+    isPublic: true,
+    viewCount: 2456,
+    likeCount: 178,
+    cloneCount: 89,
+    createdAt: "2025-09-25T08:30:00Z",
+    updatedAt: "2025-10-12T11:45:00Z",
+  },
+  {
+    id: "trip-005",
+    slug: "hatyai-cultural-temple-tour",
+    creatorId: USERS[2].id,
+    name: "หาดใหญ่ ทัวร์วัดวาอาราม 2 วัน",
+    description: "ไหว้พระพุทธมงคลนิมิตร (วัดหาดใหญ่ใน) เที่ยวสวนสาธารณะ ชมวัฒนธรรมไทย-จีน-มลายู และชิมอาหารท้องถิ่น",
+    coverImage: "/images/trips/hatyai-temple/cover.jpg",
+    startDate: "2026-01-10",
+    endDate: "2026-01-12",
+    durationDays: 2,
+    destinationIds: [DESTINATIONS[7].id], // Hat Yai
+    themeId: TRIP_THEMES[4].id, // Culture
+    numAdults: 2,
+    numChildren: 1,
+    totalBudget: 6000,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 1900,
+      activities: 800,
+      food: 2000,
+      transport: 800,
+      shopping: 300,
+      misc: 200,
+    },
+    planningStage: "planning",
+    completionPercentage: 55,
+    isPublic: true,
+    viewCount: 678,
+    likeCount: 45,
+    cloneCount: 23,
+    createdAt: "2025-10-05T14:20:00Z",
+    updatedAt: "2025-10-11T09:30:00Z",
+  },
 ];
 
 // Generate more trips
-for (let i = 4; i <= 30; i++) {
+for (let i = 6; i <= 30; i++) {
   const destIndex = i % DESTINATIONS.length;
   const themeIndex = i % TRIP_THEMES.length;
   const userIndex = i % USERS.length;

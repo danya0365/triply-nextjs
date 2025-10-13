@@ -243,6 +243,41 @@ export const DESTINATIONS: Destination[] = [
     bestFor: ["family", "golf", "weekend", "royal-heritage", "cycling"],
   },
 
+  {
+    id: "dest-008",
+    name: "หาดใหญ่",
+    nameEn: "Hat Yai",
+    slug: "hat-yai",
+    country: "ประเทศไทย",
+    region: "Southeast Asia",
+    description: "เมืองท่องเที่ยวและศูนย์กลางการค้าของภาคใต้ มีอาหารอร่อย ตลาดคึกคัก และวัฒนธรรมที่หลากหลาย",
+    highlights: [
+      "ตลาดกิมหยง",
+      "วัดหาดใหญ่ใน (พระพุทธมงคลนิมิตร)",
+      "สวนสาธารณะหาดใหญ่",
+      "ตลาดสันติชล",
+      "ถนนนิพัทธ์อุทิศ 1-2-3",
+    ],
+    coverImage: "/images/destinations/hatyai/cover.jpg",
+    images: [
+      "/images/destinations/hatyai/kimyong.jpg",
+      "/images/destinations/hatyai/temple.jpg",
+      "/images/destinations/hatyai/market.jpg",
+    ],
+    coordinates: { lat: 7.0089, lng: 100.4747 },
+    popularityScore: 78,
+    seasonality: {
+      best: ["December", "January", "February", "March"],
+      avoid: ["September", "October", "November"],
+    },
+    averageBudget: { min: 800, max: 3000, currency: "THB" },
+    tags: ["city", "food", "shopping", "culture", "market"],
+    climate: "tropical",
+    timezone: "Asia/Bangkok",
+    language: ["Thai", "Malay", "Chinese", "English"],
+    bestFor: ["food-tour", "shopping", "city-break", "weekend", "budget"],
+  },
+
   // ===== International Destinations (30 destinations) =====
   
   {
