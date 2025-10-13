@@ -472,6 +472,83 @@ const generateAccommodations = (): Accommodation[] => {
     houseRules: ["ห้ามสูบบุหรี่", "เงียบหลัง 23:00 น."],
   });
 
+  // Yala Accommodations (6 properties)
+  const yalaDest = DESTINATIONS[9]; // Yala
+  
+  accommodations.push({
+    id: `acc-${String(id++).padStart(3, "0")}`,
+    slug: "yala-nature-hotel",
+    name: "Yala Nature Hotel",
+    typeId: hotelType.id,
+    destinationId: yalaDest.id,
+    hostId: "host-010",
+    description: "โรงแรมท่ามกลางธรรมชาติ ใกล้ถ้ำนาคา น้ำตกธารโตน บรรยากาศสงบ เหมาะพักผ่อน",
+    highlights: ["ใกล้ถ้ำนาคา", "วิวธรรมชาติ", "ห้องพักสะอาด", "ร้านอาหารท้องถิ่น", "ที่จอดรถกว้าง"],
+    address: "88 ถนนสิริรัตน์ ตำบลสะเตง อำเภอเมืองยะลา ยะลา 95000",
+    coordinates: { lat: 6.5450, lng: 101.2850 },
+    distanceFromCenter: 2.0,
+    coverImage: "/images/accommodations/yala-hotel/cover.jpg",
+    images: [],
+    basePricePerNight: 900,
+    currency: "THB",
+    cleaningFee: 250,
+    serviceFeePercentage: 10,
+    maxGuests: 3,
+    bedrooms: 1,
+    beds: 2,
+    bathrooms: 1,
+    amenityIds: ["amen-001", "amen-002", "amen-003", "amen-030", "amen-040", "amen-043"],
+    status: "active",
+    isInstantBook: true,
+    isVerified: true,
+    isFeatured: true,
+    averageRating: 8.4,
+    reviewCount: 456,
+    totalBookings: 320,
+    checkInTime: "14:00",
+    checkOutTime: "12:00",
+    minimumNights: 1,
+    cancellationPolicy: "ยกเลิกฟรีภายใน 24 ชั่วโมงก่อนเช็คอิน",
+    houseRules: ["ห้ามสูบบุหรี่", "ห้ามนำสัตว์เลี้ยง", "เงียบหลัง 22:00 น."],
+  });
+
+  accommodations.push({
+    id: `acc-${String(id++).padStart(3, "0")}`,
+    slug: "yala-budget-inn",
+    name: "Yala Budget Inn",
+    typeId: "type-004", // Guesthouse
+    destinationId: yalaDest.id,
+    hostId: "host-011",
+    description: "ที่พักราคาประหยัด ใจกลางเมืองยะลา ใกล้ตลาดกลางเมือง สะดวกสบาย",
+    highlights: ["ราคาถูก", "ใจกลางเมือง", "ใกล้ตลาด", "Wi-Fi ฟรี", "สะอาด"],
+    address: "45/12 ถนนสุขสันต์ ตำบลสะเตง อำเภอเมืองยะลา ยะลา 95000",
+    coordinates: { lat: 6.5380, lng: 101.2780 },
+    distanceFromCenter: 0.8,
+    coverImage: "/images/accommodations/yala-inn/cover.jpg",
+    images: [],
+    basePricePerNight: 450,
+    currency: "THB",
+    cleaningFee: 100,
+    serviceFeePercentage: 8,
+    maxGuests: 2,
+    bedrooms: 1,
+    beds: 1,
+    bathrooms: 1,
+    amenityIds: ["amen-001", "amen-002", "amen-030", "amen-040"],
+    status: "active",
+    isInstantBook: true,
+    isVerified: true,
+    isFeatured: false,
+    averageRating: 7.9,
+    reviewCount: 178,
+    totalBookings: 145,
+    checkInTime: "14:00",
+    checkOutTime: "11:00",
+    minimumNights: 1,
+    cancellationPolicy: "ยกเลิกฟรีภายใน 24 ชั่วโมงก่อนเช็คอิน",
+    houseRules: ["ห้ามสูบบุหรี่", "เงียบหลัง 23:00 น."],
+  });
+
   // Generate more accommodations for other destinations
   // Total target: 100+ properties
 

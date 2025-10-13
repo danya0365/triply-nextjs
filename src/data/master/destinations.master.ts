@@ -313,6 +313,41 @@ export const DESTINATIONS: Destination[] = [
     bestFor: ["nature", "cool-weather", "photography", "culture", "weekend"],
   },
 
+  {
+    id: "dest-010",
+    name: "ยะลา",
+    nameEn: "Yala",
+    slug: "yala",
+    country: "ประเทศไทย",
+    region: "Southeast Asia",
+    description: "เมืองท่องเที่ยวเชิงธรรมชาติและวัฒนธรรม มีถ้ำสวยงาม น้ำตก และวัฒนธรรมพหุลักษณ์ที่น่าสนใจ",
+    highlights: [
+      "ถ้ำนาคา",
+      "น้ำตกธารโตน",
+      "วัดคูหาภิมุข",
+      "ตลาดกลางเมืองยะลา",
+      "อุทยานธรรมชาติวิทยาลิมิตานี",
+    ],
+    coverImage: "/images/destinations/yala/cover.jpg",
+    images: [
+      "/images/destinations/yala/cave.jpg",
+      "/images/destinations/yala/waterfall.jpg",
+      "/images/destinations/yala/temple.jpg",
+    ],
+    coordinates: { lat: 6.5407, lng: 101.2806 },
+    popularityScore: 68,
+    seasonality: {
+      best: ["December", "January", "February", "March"],
+      avoid: ["September", "October", "November"],
+    },
+    averageBudget: { min: 800, max: 2800, currency: "THB" },
+    tags: ["nature", "cave", "waterfall", "culture", "adventure"],
+    climate: "tropical",
+    timezone: "Asia/Bangkok",
+    language: ["Thai", "Malay"],
+    bestFor: ["nature", "adventure", "culture", "photography", "budget"],
+  },
+
   // ===== International Destinations (30 destinations) =====
   
   {

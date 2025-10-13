@@ -284,10 +284,76 @@ export const TRIPS: Trip[] = [
     createdAt: "2025-10-08T09:15:00Z",
     updatedAt: "2025-10-12T14:40:00Z",
   },
+  {
+    id: "trip-008",
+    slug: "yala-cave-adventure",
+    creatorId: USERS[2].id,
+    name: "ยะลา ผจญภัยถ้ำนาคา 2 วัน",
+    description: "สำรวจถ้ำนาคา น้ำตกธารโตน วัดคูหาภิมุข และธรรมชาติอันงดงาม",
+    coverImage: "/images/trips/yala-cave/cover.jpg",
+    startDate: "2026-01-20",
+    endDate: "2026-01-22",
+    durationDays: 2,
+    destinationIds: [DESTINATIONS[9].id], // Yala
+    themeId: TRIP_THEMES[5].id, // Adventure
+    numAdults: 2,
+    numChildren: 0,
+    totalBudget: 4500,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 1800,
+      activities: 1200,
+      food: 1000,
+      transport: 300,
+      shopping: 150,
+      misc: 50,
+    },
+    planningStage: "ready",
+    completionPercentage: 80,
+    isPublic: true,
+    viewCount: 1234,
+    likeCount: 98,
+    cloneCount: 45,
+    createdAt: "2025-09-28T11:20:00Z",
+    updatedAt: "2025-10-11T16:30:00Z",
+  },
+  {
+    id: "trip-009",
+    slug: "yala-cultural-nature",
+    creatorId: USERS[0].id,
+    name: "ยะลา วัฒนธรรมและธรรมชาติ 3 วัน",
+    description: "เที่ยวชมวัฒนธรรมพหุลักษณ์ ถ้ำสวยงาม น้ำตก และอาหารท้องถิ่น",
+    coverImage: "/images/trips/yala-culture/cover.jpg",
+    startDate: "2026-02-10",
+    endDate: "2026-02-13",
+    durationDays: 3,
+    destinationIds: [DESTINATIONS[9].id], // Yala
+    themeId: TRIP_THEMES[4].id, // Culture
+    numAdults: 2,
+    numChildren: 1,
+    totalBudget: 6800,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 2700,
+      activities: 1500,
+      food: 1800,
+      transport: 500,
+      shopping: 200,
+      misc: 100,
+    },
+    planningStage: "planning",
+    completionPercentage: 50,
+    isPublic: true,
+    viewCount: 567,
+    likeCount: 34,
+    cloneCount: 18,
+    createdAt: "2025-10-09T13:45:00Z",
+    updatedAt: "2025-10-12T10:20:00Z",
+  },
 ];
 
 // Generate more trips
-for (let i = 8; i <= 30; i++) {
+for (let i = 10; i <= 30; i++) {
   const destIndex = i % DESTINATIONS.length;
   const themeIndex = i % TRIP_THEMES.length;
   const userIndex = i % USERS.length;
