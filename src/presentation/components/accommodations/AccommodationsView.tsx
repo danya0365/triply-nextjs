@@ -115,7 +115,7 @@ export function AccommodationsView({
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <aside className="lg:w-64 flex-shrink-0">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-20">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                   ตัวกรอง

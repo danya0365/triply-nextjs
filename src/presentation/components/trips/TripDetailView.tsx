@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import type { TripDetailViewModel } from "@/src/presentation/presenters/trips/TripDetailPresenter";
+import Link from "next/link";
 
 interface TripDetailViewProps {
   viewModel: TripDetailViewModel;
@@ -62,7 +62,11 @@ export function TripDetailView({ viewModel }: TripDetailViewProps) {
               <h1 className="text-4xl font-bold mb-3">{trip.name}</h1>
               <p className="text-xl opacity-90 mb-4">{trip.description}</p>
               <div className="flex items-center gap-4">
-                <span className={`px-4 py-2 rounded-lg font-medium ${getStageColor(trip.planningStage)}`}>
+                <span
+                  className={`px-4 py-2 rounded-lg font-medium ${getStageColor(
+                    trip.planningStage
+                  )}`}
+                >
                   {getStageText(trip.planningStage)}
                 </span>
                 <span className="px-4 py-2 bg-white/20 rounded-lg">
@@ -137,43 +141,57 @@ export function TripDetailView({ viewModel }: TripDetailViewProps) {
               </h2>
               <div className="space-y-3">
                 <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <span className="text-gray-700 dark:text-gray-300">🏨 ที่พัก</span>
+                  <span className="text-gray-700 dark:text-gray-300">
+                    🏨 ที่พัก
+                  </span>
                   <span className="font-bold text-gray-900 dark:text-white">
                     ฿{trip.budgetBreakdown.accommodation.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <span className="text-gray-700 dark:text-gray-300">🎢 กิจกรรม</span>
+                  <span className="text-gray-700 dark:text-gray-300">
+                    🎢 กิจกรรม
+                  </span>
                   <span className="font-bold text-gray-900 dark:text-white">
                     ฿{trip.budgetBreakdown.activities.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <span className="text-gray-700 dark:text-gray-300">🍽️ อาหาร</span>
+                  <span className="text-gray-700 dark:text-gray-300">
+                    🍽️ อาหาร
+                  </span>
                   <span className="font-bold text-gray-900 dark:text-white">
                     ฿{trip.budgetBreakdown.food.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <span className="text-gray-700 dark:text-gray-300">🚗 การเดินทาง</span>
+                  <span className="text-gray-700 dark:text-gray-300">
+                    🚗 การเดินทาง
+                  </span>
                   <span className="font-bold text-gray-900 dark:text-white">
                     ฿{trip.budgetBreakdown.transport.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <span className="text-gray-700 dark:text-gray-300">🛍️ ช้อปปิ้ง</span>
+                  <span className="text-gray-700 dark:text-gray-300">
+                    🛍️ ช้อปปิ้ง
+                  </span>
                   <span className="font-bold text-gray-900 dark:text-white">
                     ฿{trip.budgetBreakdown.shopping.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <span className="text-gray-700 dark:text-gray-300">📝 อื่นๆ</span>
+                  <span className="text-gray-700 dark:text-gray-300">
+                    📝 อื่นๆ
+                  </span>
                   <span className="font-bold text-gray-900 dark:text-white">
                     ฿{trip.budgetBreakdown.misc.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-gradient-to-r from-sky-100 to-violet-100 dark:from-sky-900/20 dark:to-violet-900/20 rounded-lg border-2 border-sky-400">
-                  <span className="font-bold text-gray-900 dark:text-white">รวมทั้งหมด</span>
+                  <span className="font-bold text-gray-900 dark:text-white">
+                    รวมทั้งหมด
+                  </span>
                   <span className="text-2xl font-bold text-sky-600 dark:text-sky-400">
                     ฿{trip.totalBudget.toLocaleString()}
                   </span>
@@ -237,7 +255,7 @@ export function TripDetailView({ viewModel }: TripDetailViewProps) {
             )}
 
             {/* Quick Info */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-20">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
                 ข้อมูลทริป
               </h3>

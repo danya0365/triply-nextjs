@@ -1,13 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import type { DestinationDetailViewModel } from "@/src/presentation/presenters/destinations/DestinationDetailPresenter";
+import Link from "next/link";
 
 interface DestinationDetailViewProps {
   viewModel: DestinationDetailViewModel;
 }
 
-export function DestinationDetailView({ viewModel }: DestinationDetailViewProps) {
+export function DestinationDetailView({
+  viewModel,
+}: DestinationDetailViewProps) {
   const { destination, relatedDestinations, nearbyAccommodations } = viewModel;
 
   return (
@@ -27,7 +29,7 @@ export function DestinationDetailView({ viewModel }: DestinationDetailViewProps)
             <span className="text-xl">📍</span>
             <span className="font-medium">{destination.country}</span>
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
             {destination.name}
             <br />
@@ -35,10 +37,10 @@ export function DestinationDetailView({ viewModel }: DestinationDetailViewProps)
               {destination.nameEn}
             </span>
           </h1>
-          
+
           <div className="flex flex-wrap justify-center gap-4 mt-8">
             {destination.tags?.map((tag, index) => (
-              <span 
+              <span
                 key={index}
                 className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-full text-sm font-medium border border-white/20 hover:bg-white/20 transition-colors cursor-pointer"
               >
@@ -168,7 +170,7 @@ export function DestinationDetailView({ viewModel }: DestinationDetailViewProps)
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Info */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-20">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                 ข้อมูลด่วน
               </h3>
