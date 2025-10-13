@@ -85,29 +85,60 @@ export function TripPlannerView({ initialViewModel }: TripPlannerViewProps) {
     <>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-sky-300 to-violet-300 dark:from-sky-400 dark:to-violet-400 py-12">
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl font-bold text-white mb-4">วางแผนทริป</h1>
-            <p className="text-white/90 text-lg mb-6">
-              สร้างและจัดการแพลนการเดินทางของคุณ
+        <div className="relative py-20">
+          {/* Animated Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-sky-400 to-emerald-400 dark:from-violet-600 dark:via-sky-500 dark:to-emerald-500">
+            <div className="absolute inset-0 bg-black/30 dark:bg-black/40" />
+            {/* Animated blobs */}
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-300/30 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-300/30 rounded-full blur-3xl animate-pulse delay-1000" />
+          </div>
+
+          <div className="relative z-10 container mx-auto px-4 text-center">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+              วางแผนทริป<br />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-orange-300">
+                สร้างประสบการณ์การเดินทางที่สมบูรณ์แบบ
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+              สร้างและจัดการแพลนการเดินทางของคุณได้อย่างง่ายดาย
             </p>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearchSubmit} className="max-w-2xl">
-              <div className="flex gap-2">
+            <form onSubmit={handleSearchSubmit} className="max-w-2xl w-full mx-auto">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                  <svg className="w-5 h-5 text-white/70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                  </svg>
+                </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="ค้นหาทริป..."
-                  className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white bg-white dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                  placeholder="ค้นหาทริป เมือง หรือจุดหมายปลายทาง..."
+                  className="w-full pl-12 pr-6 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200"
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-white dark:bg-gray-800 text-sky-600 dark:text-sky-400 font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 px-5 py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-medium rounded-lg flex items-center gap-2 transition-all duration-200 border border-white/20 hover:border-white/30"
                 >
-                  🔍 ค้นหา
+                  <span>ค้นหา</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                 </button>
+                
+                {/* Popular searches */}
+                <div className="flex flex-wrap justify-center gap-2 mt-3 text-sm text-white/80">
+                  <span>ยอดนิยม:</span>
+                  <button type="button" onClick={() => setSearchQuery('ทะเล')} className="hover:text-white transition-colors">ทะเล</button>
+                  <span>•</span>
+                  <button type="button" onClick={() => setSearchQuery('ภูเขา')} className="hover:text-white transition-colors">ภูเขา</button>
+                  <span>•</span>
+                  <button type="button" onClick={() => setSearchQuery('ธรรมชาติ')} className="hover:text-white transition-colors">ธรรมชาติ</button>
+                </div>
               </div>
             </form>
           </div>
