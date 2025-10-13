@@ -395,6 +395,83 @@ const generateAccommodations = (): Accommodation[] => {
     houseRules: ["ห้ามสูบบุหรี่", "ห้ามนำสัตว์เลี้ยง", "เงียบหลัง 22:00 น."],
   });
 
+  // Betong Accommodations (8 properties)
+  const betongDest = DESTINATIONS[8]; // Betong
+  
+  accommodations.push({
+    id: `acc-${String(id++).padStart(3, "0")}`,
+    slug: "betong-mountain-resort",
+    name: "Betong Mountain View Resort",
+    typeId: resortType.id,
+    destinationId: betongDest.id,
+    hostId: "host-008",
+    description: "รีสอร์ทบนเขา วิวทะเลหมอกสวยงาม อากาศเย็นสบาย ใกล้สวนดอกซากุระ เหมาะพักผ่อน",
+    highlights: ["วิวทะเลหมอก", "อากาศเย็น", "ใกล้สวนซากุระ", "ร้านอาหารท้องถิ่น", "บรรยากาศสงบ"],
+    address: "99 หมู่ 5 ตำบลเบตง อำเภอเบตง สงขลา 95110",
+    coordinates: { lat: 5.7850, lng: 101.0820 },
+    distanceFromCenter: 3.5,
+    coverImage: "/images/accommodations/betong-resort/cover.jpg",
+    images: [],
+    basePricePerNight: 1500,
+    currency: "THB",
+    cleaningFee: 400,
+    serviceFeePercentage: 10,
+    maxGuests: 4,
+    bedrooms: 2,
+    beds: 2,
+    bathrooms: 2,
+    amenityIds: ["amen-001", "amen-002", "amen-003", "amen-010", "amen-030", "amen-040", "amen-043"],
+    status: "active",
+    isInstantBook: true,
+    isVerified: true,
+    isFeatured: true,
+    averageRating: 8.9,
+    reviewCount: 567,
+    totalBookings: 420,
+    checkInTime: "14:00",
+    checkOutTime: "12:00",
+    minimumNights: 2,
+    cancellationPolicy: "ยกเลิกฟรีภายใน 48 ชั่วโมงก่อนเช็คอิน",
+    houseRules: ["ห้ามสูบบุหรี่", "ห้ามนำสัตว์เลี้ยง", "เงียบหลัง 22:00 น."],
+  });
+
+  accommodations.push({
+    id: `acc-${String(id++).padStart(3, "0")}`,
+    slug: "betong-guesthouse",
+    name: "Betong Cozy Guesthouse",
+    typeId: "type-004", // Guesthouse
+    destinationId: betongDest.id,
+    hostId: "host-009",
+    description: "เกสต์เฮ้าส์อบอุ่น ใจกลางเมืองเบตง ใกล้ตลาดโต้รุ่ง ราคาประหยัด บรรยากาศเป็นกันเอง",
+    highlights: ["ราคาประหยัด", "ใจกลางเมือง", "ใกล้ตลาดโต้รุ่ง", "เจ้าของใจดี", "สะอาด"],
+    address: "23/7 ถนนเบตง ตำบลเบตง อำเภอเบตง สงขลา 95110",
+    coordinates: { lat: 5.7720, lng: 101.0730 },
+    distanceFromCenter: 0.5,
+    coverImage: "/images/accommodations/betong-guesthouse/cover.jpg",
+    images: [],
+    basePricePerNight: 600,
+    currency: "THB",
+    cleaningFee: 150,
+    serviceFeePercentage: 8,
+    maxGuests: 2,
+    bedrooms: 1,
+    beds: 1,
+    bathrooms: 1,
+    amenityIds: ["amen-001", "amen-002", "amen-030", "amen-040"],
+    status: "active",
+    isInstantBook: true,
+    isVerified: true,
+    isFeatured: false,
+    averageRating: 8.3,
+    reviewCount: 234,
+    totalBookings: 180,
+    checkInTime: "14:00",
+    checkOutTime: "11:00",
+    minimumNights: 1,
+    cancellationPolicy: "ยกเลิกฟรีภายใน 24 ชั่วโมงก่อนเช็คอิน",
+    houseRules: ["ห้ามสูบบุหรี่", "เงียบหลัง 23:00 น."],
+  });
+
   // Generate more accommodations for other destinations
   // Total target: 100+ properties
 

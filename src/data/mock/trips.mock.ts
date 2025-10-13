@@ -218,10 +218,76 @@ export const TRIPS: Trip[] = [
     createdAt: "2025-10-05T14:20:00Z",
     updatedAt: "2025-10-11T09:30:00Z",
   },
+  {
+    id: "trip-006",
+    slug: "betong-sakura-season",
+    creatorId: USERS[0].id,
+    name: "เบตง ฤดูซากุระบาน 3 วัน 2 คืน",
+    description: "ชมดอกซากุระบาน ทะเลหมอกภูเขาไอซ์แลนด์ น้ำตกโตนงาช้าง ตลาดโต้รุ่ง และอาหารท้องถิ่นรสเด็ด",
+    coverImage: "/images/trips/betong-sakura/cover.jpg",
+    startDate: "2026-01-15",
+    endDate: "2026-01-18",
+    durationDays: 3,
+    destinationIds: [DESTINATIONS[8].id], // Betong
+    themeId: TRIP_THEMES[8].id, // Nature
+    numAdults: 2,
+    numChildren: 0,
+    totalBudget: 9500,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 3000,
+      activities: 2000,
+      food: 2500,
+      transport: 1500,
+      shopping: 300,
+      misc: 200,
+    },
+    planningStage: "ready",
+    completionPercentage: 85,
+    isPublic: true,
+    viewCount: 1834,
+    likeCount: 142,
+    cloneCount: 67,
+    createdAt: "2025-09-15T10:30:00Z",
+    updatedAt: "2025-10-10T15:20:00Z",
+  },
+  {
+    id: "trip-007",
+    slug: "betong-photography-tour",
+    creatorId: USERS[1].id,
+    name: "เบตง ทริปถ่ายรูป 2 วัน",
+    description: "ทริปถ่ายรูปทะเลหมอก ซากุระ น้ำตก และธรรมชาติสวยงาม เหมาะสำหรับนักถ่ายรูป",
+    coverImage: "/images/trips/betong-photo/cover.jpg",
+    startDate: "2026-02-01",
+    endDate: "2026-02-03",
+    durationDays: 2,
+    destinationIds: [DESTINATIONS[8].id], // Betong
+    themeId: TRIP_THEMES[8].id, // Nature
+    numAdults: 1,
+    numChildren: 0,
+    totalBudget: 5500,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 1200,
+      activities: 1500,
+      food: 1500,
+      transport: 1000,
+      shopping: 200,
+      misc: 100,
+    },
+    planningStage: "planning",
+    completionPercentage: 60,
+    isPublic: true,
+    viewCount: 892,
+    likeCount: 56,
+    cloneCount: 28,
+    createdAt: "2025-10-08T09:15:00Z",
+    updatedAt: "2025-10-12T14:40:00Z",
+  },
 ];
 
 // Generate more trips
-for (let i = 6; i <= 30; i++) {
+for (let i = 8; i <= 30; i++) {
   const destIndex = i % DESTINATIONS.length;
   const themeIndex = i % TRIP_THEMES.length;
   const userIndex = i % USERS.length;

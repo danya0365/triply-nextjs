@@ -278,6 +278,41 @@ export const DESTINATIONS: Destination[] = [
     bestFor: ["food-tour", "shopping", "city-break", "weekend", "budget"],
   },
 
+  {
+    id: "dest-009",
+    name: "เบตง",
+    nameEn: "Betong",
+    slug: "betong",
+    country: "ประเทศไทย",
+    region: "Southeast Asia",
+    description: "เมืองชายแดนใต้สุดของไทย อากาศเย็นสบาย มีทะเลหมอก สวนดอกซากุระ และวัฒนธรรมไทย-จีน-มลายู",
+    highlights: [
+      "สวนดอกซากุระ",
+      "ทะเลหมอกภูเขาไอซ์แลนด์",
+      "น้ำตกโตนงาช้าง",
+      "ตลาดโต้รุ่งเบตง",
+      "ถนนคนเดินเบตง",
+    ],
+    coverImage: "/images/destinations/betong/cover.jpg",
+    images: [
+      "/images/destinations/betong/sakura.jpg",
+      "/images/destinations/betong/fog.jpg",
+      "/images/destinations/betong/waterfall.jpg",
+    ],
+    coordinates: { lat: 5.7731, lng: 101.0742 },
+    popularityScore: 72,
+    seasonality: {
+      best: ["December", "January", "February"],
+      avoid: ["September", "October", "November"],
+    },
+    averageBudget: { min: 1000, max: 3500, currency: "THB" },
+    tags: ["mountain", "nature", "cool-weather", "culture", "border"],
+    climate: "temperate",
+    timezone: "Asia/Bangkok",
+    language: ["Thai", "Malay", "Chinese"],
+    bestFor: ["nature", "cool-weather", "photography", "culture", "weekend"],
+  },
+
   // ===== International Destinations (30 destinations) =====
   
   {
