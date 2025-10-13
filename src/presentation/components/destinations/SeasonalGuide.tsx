@@ -1,7 +1,6 @@
-"use client";
-
-import Link from "next/link";
 import type { Destination } from "@/src/data/master/destinations.master";
+import Image from "next/image";
+import Link from "next/link";
 
 interface SeasonalGuideProps {
   destinations: Destination[];
@@ -65,11 +64,35 @@ export function SeasonalGuide({
                   ช่วงนี้ดี!
                 </div>
                 {destination.coverImage ? (
-                  <img
-                    src={destination.coverImage}
-                    alt={destination.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
+                  <>
+                    <Image
+                      src={destination.coverImage}
+                      alt={destination.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      onError={(e) => {
+                        // Fallback to emoji if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = "none";
+                        const fallback = document.createElement("div");
+                        fallback.className =
+                          "w-full h-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-4xl";
+                        fallback.innerHTML = getDestinationEmoji(
+                          destination.tags[0]
+                        );
+                        target.parentNode?.insertBefore(
+                          fallback,
+                          target.nextSibling
+                        );
+                      }}
+                      priority={false}
+                    />
+                    {/* Fallback for SSR/SSG */}
+                    <div className="w-full h-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-4xl hidden">
+                      {getDestinationEmoji(destination.tags[0])}
+                    </div>
+                  </>
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-4xl">
                     {getDestinationEmoji(destination.tags[0])}
@@ -132,7 +155,8 @@ export function SeasonalGuide({
 
           <div className="mt-4 text-sm text-gray-600 dark:text-gray-400 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
             💡 <strong>คำแนะนำ:</strong> จุดหมายเหล่านี้อาจมีฝนตก
-            อากาศร้อนเกินไป หรือเป็นช่วง off-season ควรหลีกเลี่ยงหรือเตรียมตัวให้ดี
+            อากาศร้อนเกินไป หรือเป็นช่วง off-season
+            ควรหลีกเลี่ยงหรือเตรียมตัวให้ดี
           </div>
         </div>
       )}
