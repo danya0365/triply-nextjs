@@ -1,52 +1,63 @@
-"use client";
-
 import { TripPlannerView } from "@/src/presentation/components/trip-planner/TripPlannerView";
-import type { TripPlannerViewModel } from "@/src/presentation/presenters/trip-planner/TripPlannerPresenter";
-import { TripPlannerPresenter } from "@/src/presentation/presenters/trip-planner/TripPlannerPresenter";
-import { useAuthStore } from "@/src/store/authStore";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { TripPlannerPresenterFactory } from "@/src/presentation/presenters/trip-planner/TripPlannerPresenter";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function TripPlannerPage() {
-  const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
-  const [viewModel, setViewModel] = useState<TripPlannerViewModel | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(true);
+// Tell Next.js this is a dynamic page
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
-  useEffect(() => {
-    // Check authentication - trip planner requires login
-    if (!isAuthenticated || !user) {
-      router.push("/login");
-      return;
+type TripPlannerPageProps = Record<string, never>;
+
+/**
+ * Generate metadata for the page
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Trip Planner | Triply",
+    description: "Plan and manage your trips with Triply",
+  };
+}
+
+/**
+ * Trip Planner page - Server Component for SEO optimization
+ * Uses presenter pattern following Clean Architecture
+ */
+export default async function TripPlannerPage({}: TripPlannerPageProps) {
+  const presenter = await TripPlannerPresenterFactory.createServer();
+
+  try {
+    // Get view model from presenter
+    const viewModel = await presenter.getViewModel({});
+
+    return <TripPlannerView initialViewModel={viewModel} />;
+  } catch (error) {
+    console.error("Error fetching trip planner data:", error);
+
+    // Handle authentication error
+    if ((error as Error).message === "Unauthorized") {
+      redirect("/login");
     }
 
-    // Load trip planner data
-    const loadTripPlanner = async () => {
-      const presenter = new TripPlannerPresenter();
-      const data = await presenter.getViewModel({}, user.id);
-      setViewModel(data);
-      setIsLoading(false);
-    };
-
-    loadTripPlanner();
-  }, [isAuthenticated, user, router]);
-
-  if (isLoading || !viewModel) {
+    // Fallback UI
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">กำลังโหลด...</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">
+            เกิดข้อผิดพลาด
+          </h1>
+          <p className="text-muted-foreground mb-4">
+            ไม่สามารถโหลดข้อมูลทริปได้
+          </p>
+          <Link
+            href="/"
+            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            กลับหน้าแรก
+          </Link>
         </div>
       </div>
     );
   }
-
-  if (!user) {
-    return null;
-  }
-
-  return <TripPlannerView initialViewModel={viewModel} />;
 }

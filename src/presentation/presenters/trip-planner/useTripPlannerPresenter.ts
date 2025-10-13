@@ -1,19 +1,22 @@
-/**
- * Trip Planner Presenter Hook
- * Client-side hook for trip planner page
- */
-
 "use client";
 
-import { useState, useCallback } from "react";
-import type {
-  TripPlannerViewModel,
-  TripPlannerFilters,
-} from "./TripPlannerPresenter";
-import type { Trip } from "@/src/data/mock/trips.mock";
+import { TripPlannerPresenter } from "./TripPlannerPresenter";
 
-export function useTripPlannerPresenter(initialViewModel: TripPlannerViewModel) {
-  const [viewModel] = useState<TripPlannerViewModel>(initialViewModel);
+const presenter = new TripPlannerPresenter();
+
+import type { Trip } from "@/src/data/mock/trips.mock";
+import { useAuthStore } from "@/src/store/authStore";
+import { useCallback, useEffect, useState } from "react";
+import type {
+  TripPlannerFilters,
+  TripPlannerViewModel,
+} from "./TripPlannerPresenter";
+
+export function useTripPlannerPresenter(
+  initialViewModel: TripPlannerViewModel
+) {
+  const [viewModel, setViewModel] =
+    useState<TripPlannerViewModel>(initialViewModel);
   const [filters, setFilters] = useState<TripPlannerFilters>({});
   const [error, setError] = useState<string | null>(null);
 
@@ -26,11 +29,26 @@ export function useTripPlannerPresenter(initialViewModel: TripPlannerViewModel) 
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [activeTab, setActiveTab] = useState<"browse" | "my-trips">("browse");
 
+  const { isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    // Load trip planner data
+    const loadTripPlanner = async () => {
+      const data = await presenter.getViewModel({}, user?.id);
+      setViewModel(data);
+    };
+
+    loadTripPlanner();
+  }, [isAuthenticated, user]);
+
   // Filter actions
-  const updateFilters = useCallback((newFilters: Partial<TripPlannerFilters>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
-    // TODO: Reload data with new filters
-  }, []);
+  const updateFilters = useCallback(
+    (newFilters: Partial<TripPlannerFilters>) => {
+      setFilters((prev) => ({ ...prev, ...newFilters }));
+      // TODO: Reload data with new filters
+    },
+    []
+  );
 
   const clearFilters = useCallback(() => {
     setFilters({});
