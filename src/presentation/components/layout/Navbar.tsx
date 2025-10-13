@@ -57,7 +57,6 @@ export function Navbar() {
       href: "/destinations",
       label: "สำรวจจุดหมาย",
       icon: "🌍",
-      featured: true, // Highlight this link
     },
     { href: "/trip-planner", label: "วางแผนทริป", icon: "🗺️" },
     { href: "/accommodations", label: "ค้นหาที่พัก", icon: "🏨" },
@@ -230,7 +229,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={`block px-4 py-3 rounded-lg ${
-                  link.featured
+                  isActive(link.href)
                     ? "bg-gradient-to-r from-sky-400 to-violet-400 text-white font-bold mb-2"
                     : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
                 }`}
