@@ -416,10 +416,76 @@ export const TRIPS: Trip[] = [
     createdAt: "2025-10-07T15:30:00Z",
     updatedAt: "2025-10-12T09:45:00Z",
   },
+  {
+    id: "trip-012",
+    slug: "narathiwat-waterfall-beach",
+    creatorId: USERS[0].id,
+    name: "นราธิวาส น้ำตกและชายหาด 3 วัน",
+    description: "เที่ยวน้ำตกบาโงสะดุดตา พักผ่อนหาดนราทัศน์ ชิมอาหารท้องถิ่น และตากใบ",
+    coverImage: "/images/trips/narathiwat-nature/cover.jpg",
+    startDate: "2026-01-28",
+    endDate: "2026-01-31",
+    durationDays: 3,
+    destinationIds: [DESTINATIONS[11].id], // Narathiwat
+    themeId: TRIP_THEMES[8].id, // Nature
+    numAdults: 2,
+    numChildren: 0,
+    totalBudget: 7500,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 3200,
+      activities: 1800,
+      food: 1500,
+      transport: 700,
+      shopping: 200,
+      misc: 100,
+    },
+    planningStage: "ready",
+    completionPercentage: 80,
+    isPublic: true,
+    viewCount: 1123,
+    likeCount: 89,
+    cloneCount: 41,
+    createdAt: "2025-10-02T12:30:00Z",
+    updatedAt: "2025-10-11T17:15:00Z",
+  },
+  {
+    id: "trip-013",
+    slug: "narathiwat-cultural-tour",
+    creatorId: USERS[1].id,
+    name: "นราธิวาส ทัวร์วัฒนธรรม 2 วัน",
+    description: "สำรวจวัฒนธรรมมลายู มัสยิดกลางเมือง ตลาดโต้รุ่ง และอาหารท้องถิ่นรสเด็ด",
+    coverImage: "/images/trips/narathiwat-culture/cover.jpg",
+    startDate: "2026-02-20",
+    endDate: "2026-02-22",
+    durationDays: 2,
+    destinationIds: [DESTINATIONS[11].id], // Narathiwat
+    themeId: TRIP_THEMES[4].id, // Culture
+    numAdults: 2,
+    numChildren: 1,
+    totalBudget: 5200,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 1300,
+      activities: 1000,
+      food: 1800,
+      transport: 800,
+      shopping: 200,
+      misc: 100,
+    },
+    planningStage: "planning",
+    completionPercentage: 55,
+    isPublic: true,
+    viewCount: 645,
+    likeCount: 52,
+    cloneCount: 24,
+    createdAt: "2025-10-10T08:45:00Z",
+    updatedAt: "2025-10-12T13:20:00Z",
+  },
 ];
 
 // Generate more trips
-for (let i = 10; i <= 30; i++) {
+for (let i = 14; i <= 30; i++) {
   const destIndex = i % DESTINATIONS.length;
   const themeIndex = i % TRIP_THEMES.length;
   const userIndex = i % USERS.length;

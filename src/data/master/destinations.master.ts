@@ -383,6 +383,41 @@ export const DESTINATIONS: Destination[] = [
     bestFor: ["beach", "culture", "food-tour", "heritage", "photography"],
   },
 
+  {
+    id: "dest-012",
+    name: "นราธิวาส",
+    nameEn: "Narathiwat",
+    slug: "narathiwat",
+    country: "ประเทศไทย",
+    region: "Southeast Asia",
+    description: "เมืองชายแดนใต้สุดของไทย มีชายหาดสวยงาม น้ำตกบาโงสะดุดตา วัฒนธรรมมลายูที่เป็นเอกลักษณ์ และอาหารท้องถิ่นรสเด็ด",
+    highlights: [
+      "น้ำตกบาโงสะดุดตา",
+      "หาดนราทัศน์",
+      "มัสยิดกลางนราธิวาส",
+      "ตลาดโต้รุ่งนราธิวาส",
+      "ตากใบ (ตากบาตรเทโว)",
+    ],
+    coverImage: "/images/destinations/narathiwat/cover.jpg",
+    images: [
+      "/images/destinations/narathiwat/waterfall.jpg",
+      "/images/destinations/narathiwat/beach.jpg",
+      "/images/destinations/narathiwat/takbai.jpg",
+    ],
+    coordinates: { lat: 6.4254, lng: 101.8253 },
+    popularityScore: 65,
+    seasonality: {
+      best: ["December", "January", "February", "March"],
+      avoid: ["September", "October", "November"],
+    },
+    averageBudget: { min: 800, max: 2800, currency: "THB" },
+    tags: ["beach", "waterfall", "culture", "border", "nature"],
+    climate: "tropical",
+    timezone: "Asia/Bangkok",
+    language: ["Thai", "Malay"],
+    bestFor: ["nature", "beach", "culture", "photography", "budget"],
+  },
+
   // ===== International Destinations (30 destinations) =====
   
   {
