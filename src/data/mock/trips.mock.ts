@@ -420,8 +420,8 @@ export const TRIPS: Trip[] = [
     id: "trip-012",
     slug: "narathiwat-waterfall-beach",
     creatorId: USERS[0].id,
-    name: "นราธิวาส น้ำตกและชายหาด 3 วัน",
-    description: "เที่ยวน้ำตกบาโงสะดุดตา พักผ่อนหาดนราทัศน์ ชิมอาหารท้องถิ่น และตากใบ",
+    name: "นราธิวาส น้ำตกและชายหาด 3 วัน 2 คืน",
+    description: "เที่ยวน้ำตกบาโงสะดุดตาที่สวยที่สุดในภาคใต้ พักผ่อนหาดนราทัศน์ ชิมอาหารทะเลสด ขนมหวานมลายู และชมพระอาทิตย์ตกที่สวยงาม",
     coverImage: "/images/trips/narathiwat-nature/cover.jpg",
     startDate: "2026-01-28",
     endDate: "2026-01-31",
@@ -453,8 +453,8 @@ export const TRIPS: Trip[] = [
     id: "trip-013",
     slug: "narathiwat-cultural-tour",
     creatorId: USERS[1].id,
-    name: "นราธิวาส ทัวร์วัฒนธรรม 2 วัน",
-    description: "สำรวจวัฒนธรรมมลายู มัสยิดกลางเมือง ตลาดโต้รุ่ง และอาหารท้องถิ่นรสเด็ด",
+    name: "นราธิวาส ทัวร์วัฒนธรรมมลายู 2 วัน",
+    description: "สำรวจวัฒนธรรมมลายูที่เป็นเอกลักษณ์ มัสยิดกลางเมือง ตลาดโต้รุ่ง ชิมอาหารพื้นเมืองและขนมหวานมลายูรสเด็ด ชมตากใบ (ตากบาตรเทโว)",
     coverImage: "/images/trips/narathiwat-culture/cover.jpg",
     startDate: "2026-02-20",
     endDate: "2026-02-22",
@@ -482,10 +482,43 @@ export const TRIPS: Trip[] = [
     createdAt: "2025-10-10T08:45:00Z",
     updatedAt: "2025-10-12T13:20:00Z",
   },
+  {
+    id: "trip-014",
+    slug: "narathiwat-takbai-tradition",
+    creatorId: USERS[2].id,
+    name: "นราธิวาส ตากใบและประเพณี 4 วัน",
+    description: "ชมประเพณีตากใบ (ตากบาตรเทโว) ที่มีชื่อเสียงระดับโลก เที่ยวน้ำตกบาโงสะดุดตา หาดนราทัศน์ พิพิธภัณฑ์ และชิมอาหารท้องถิ่น",
+    coverImage: "/images/trips/narathiwat-takbai/cover.jpg",
+    startDate: "2026-10-15",
+    endDate: "2026-10-19",
+    durationDays: 4,
+    destinationIds: [DESTINATIONS[11].id], // Narathiwat
+    themeId: TRIP_THEMES[4].id, // Culture
+    numAdults: 2,
+    numChildren: 0,
+    totalBudget: 9800,
+    currency: "THB",
+    budgetBreakdown: {
+      accommodation: 3200,
+      activities: 2500,
+      food: 2500,
+      transport: 1000,
+      shopping: 400,
+      misc: 200,
+    },
+    planningStage: "planning",
+    completionPercentage: 45,
+    isPublic: true,
+    viewCount: 2134,
+    likeCount: 187,
+    cloneCount: 92,
+    createdAt: "2025-10-01T14:00:00Z",
+    updatedAt: "2025-10-12T16:30:00Z",
+  },
 ];
 
 // Generate more trips
-for (let i = 14; i <= 30; i++) {
+for (let i = 15; i <= 30; i++) {
   const destIndex = i % DESTINATIONS.length;
   const themeIndex = i % TRIP_THEMES.length;
   const userIndex = i % USERS.length;
